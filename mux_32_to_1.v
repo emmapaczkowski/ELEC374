@@ -6,7 +6,7 @@ module 32_to_1_mux(
 	input [31:0] BusMuxIn_R0,
 	input [31:0] BusMuxIn_R1,
 	input [31:0] BusMuxIn_R2,
-	input [31:0] BusMuxIn_R3,
+	input [31:0] BusMuxIn_R3, 
 	input [31:0] BusMuxIn_R4,
 	input [31:0] BusMuxIn_R5,
 	input [31:0] BusMuxIn_R6,
