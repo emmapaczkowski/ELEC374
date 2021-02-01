@@ -6,10 +6,9 @@ module cpu(
 	input wire Mdatain,
 	input wire [31:0] inPort,
 	output wire [31:0] outPort
-	
 );
 
-	//encoder signals, initially all must be 0
+	// Wires being used as inputs to the bus's encoder. Originally they are all initialized to 0.
 	wire R0out = 0;
 	wire R1out = 0;
 	wire R2out = 0;
@@ -35,10 +34,11 @@ module cpu(
 	wire InPortout = 0;
 	wire Cout = 0;
 	
+	// Encoder input and output wires
 	wire [31:0]	encoder_in;
 	wire [4:0] encoder_out;
 	
-	// why backwards?
+	// Connecting the register output signals to the encoder's input wire
 	assign encoder_in = {
 								{8{1'b0}},
 								Cout,
@@ -68,10 +68,10 @@ module cpu(
 								};
 	
 
-	//Instatiating 32-to-5 encoder for the bus
-	encoder_32_to_5 encoder(encoder_in, encoder_out);
+    // Instatiating 32-to-5 encoder for the bus
+    encoder_32_to_5 encoder(encoder_in, encoder_out);
 	
- 	 //Enable signals for the registers
+    // Enable signals for the registers
     wire R1_enable;
     wire R2_enable;
     wire R3_enable;
@@ -98,7 +98,7 @@ module cpu(
 	 
 	 wire [31:0] bus_contents;
 	 
-	 //Inputs to the 32-to_1 mux that feeds to the bus
+	 //Inputs to the bus's 32-to_1 multiplexer
 	 wire [31:0] R0_data_out;
 	wire [31:0] R1_data_out;
 	wire [31:0] R2_data_out;
@@ -124,7 +124,7 @@ module cpu(
 	wire [31:0] InPort_data_out;
 	wire [31:0] C_data_out;
  
-   //Creating the 32-bit registers
+   // Creating all 32-bit registers
 	reg_32_bits R0(clk, clr, 1'd0 , bus_contents, R0_data_out); 
 	reg_32_bits R1(clk, clr, R1_enable, bus_contents, R1_data_out);
 	reg_32_bits R2(clk, clr, R2_enable, bus_contents, R2_data_out);
@@ -151,11 +151,15 @@ module cpu(
 	reg_32_bits C_reg(clk, clr, C_enable, bus_contents, C_data_out);
 	
 	
-	//creating the MDR
+	// Creating the MDR
+	// Select signal for the MDR's multiplexer
 	wire read_sig;
+	// Multiplexer used to select an input for the MDR
 	mux_2_to_1 MDMux(MDatain, BusMuxOut, read_sig, MDR_mux_out);
+	// Instatiating the MDR register
 	reg_32_bits MDR_reg(clk, clr, MDR_enable, MDR_mux_out, MDR_data_out);
 	
+	// Multiplexer to select which data to send out on the bus
 	mux_32_to_1 BusMux(
 		.BusMuxIn_R0(R0_data_out),
 		.BusMuxIn_R1(R1_data_out), 
