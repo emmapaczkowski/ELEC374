@@ -1,7 +1,7 @@
 module mul_32_bit(
-   input [31:0]  Q, 
+	input [31:0]  Q,
 	input [31:0]  M,
-   output reg [63:0] prod
+	output reg [63:0] prod
 	);
 	
    integer i;
