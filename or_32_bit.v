@@ -8,7 +8,7 @@ module or_32_bit(
 	
 	genvar i;
 	generate
-		for (i=0; i<32;i=i+1) begin : loop
+		for (i=0; i<32; i=i+1) begin : loop
 			assign Rz[i] = ((Ra[i])|(Rb[i]));
 		end
 	endgenerate
