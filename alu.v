@@ -59,13 +59,13 @@ module ALU(
 					C_reg[63:32] <= 32'd0;
 				end
 				
-				Shift_left: begin
-					C_reg[31:0] <= shl_out[31:0];
+				Shift_right: begin
+					C_reg[31:0] <= shr_out[31:0];
 					C_reg[63:32] <= 32'd0;
 				end
 				
-				Shift_right: begin
-					C_reg[31:0] <= shr_out[31:0];
+				Shift_left: begin
+					C_reg[31:0] <= shl_out[31:0];
 					C_reg[63:32] <= 32'd0;
 				end
 				
@@ -86,26 +86,22 @@ module ALU(
 				Division: begin
 					C_reg[63:0] <= div_out[63:0];
 				end
-				
-//				default: begin
-//					C_reg[63:0] <= 64'd0;
-//	
-//				end
+
 			
 			endcase
 	end
 	
 	//ALU Operations
-	shl_32_bit shl(Y_reg,B_reg,shl_out);
-	shr_32_bit shr(Y_reg,B_reg,shr_out);
 	or_32_bit lor(Y_reg,B_reg,lor_out);
 	and_32_bit land(Y_reg,B_reg,land_out);
 	negate_32_bit neg(A_reg,neg_out);
 	not_32_bit not_module(A_reg,not_out);
 	add_32_bit adder(.Ra(Y_reg), .Rb(B_reg),.cin({1'd0}),.sum(adder_sum),.cout(adder_cout));
 	sub_32_bit subtractor(.Ra(Y_reg), .Rb(B_reg),.cin({1'd0}),.sum(sub_sum),.cout(sub_cout));
-	rol_32_bit rol_op(Y_reg,B_reg,rol_out);
 	ror_32_bit ror_op(Y_reg,B_reg,ror_out);
+	rol_32_bit rol_op(Y_reg,B_reg,rol_out);
+	shl_32_bit shl(Y_reg,B_reg,shl_out);
+	shr_32_bit shr(Y_reg,B_reg,shr_out);
 	dib_32_bit div(Y_reg,B_reg,div_out);
 	mul_32_bit mul(Y_reg,B_reg,mul_out);
 	//PC Incrementor
