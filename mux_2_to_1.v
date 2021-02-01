@@ -1,13 +1,14 @@
+// 2-to-1 Multiplexer to be used by the ALU
 `timescale 1ns/10ps
 
-module 2_to_1_mux (input wire [31:0] input0, input wire [31:0] input1, input wire sig, output reg [31:0] out);
+module 2_to_1_mux (input wire [31:0] input1, input wire [31:0] input2, input wire signal, output reg [31:0] output);
 
 always@(*)begin
-		if (sig) begin
-			out[31:0] <= input1[31:0];
+		if (signal) begin
+			output[31:0] <= input2[31:0];
 		end
 		else begin
-			out[31:0] <= input0[31:0];
+			output[31:0] <= input1[31:0];
 		end
 	end
  
