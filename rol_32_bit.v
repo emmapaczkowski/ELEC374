@@ -1,6 +1,6 @@
-module rol_32_bit(input wire [31:0] in, input wire [4:0] rotate, output reg [31:0] out);
+module rol_32_bit(input wire [31:0] in, input wire [4:0] numRotateBits, output reg [31:0] out);
 	always@(*) begin
-		case(rotate)
+		case(numRotateBits)
 			5'd1 : out <= {in[30:0], in[31]};
 			5'd2 : out <= {in[29:0], in[31:30]};
 			5'd3 : out <= {in[28:0], in[31:29]};
