@@ -1,6 +1,6 @@
 `timescale 1ns/10ps
 
-module 32_to_5_encoder(input wire [31:0] encoderInput, output reg [4:0] encoderOutput);
+module encoder_32_to_5 (input wire [31:0] encoderInput, output reg [4:0] encoderOutput);
 		
 	always@(*) begin
 		case(encoderInput)

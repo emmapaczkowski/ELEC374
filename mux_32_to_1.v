@@ -2,7 +2,7 @@
 
 `timescale 1ns/10ps
 
-module 32_to_1_mux(
+module mux_32_to_1(
 	// General purpose registers
 	input [31:0] BusMuxIn_R0,
 	input [31:0] BusMuxIn_R1,

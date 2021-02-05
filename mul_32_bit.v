@@ -20,7 +20,7 @@ module mul_32_bit(
    // Pre-compute products of Q for +1,+2,-1,-2
 	wire [33:0]   Q1_positive = { Q[31], Q[31], Q };     // the sign extended multiplicand
 	wire [33:0]   Q2_positive = { Q[31], Q, 1'b0 };      // the sign extended multiplicand shifted left to be multplies by two
-	wire [33:0]   Q1 negative = -Q1_positive;                       
+	wire [33:0]   Q1_negative = -Q1_positive;                       
 	wire [33:0]   Q2_negative = -Q2_positive;                       
 
    always @(*) begin
@@ -39,8 +39,8 @@ module mul_32_bit(
           3'b010: prod_cur = prod_pre + Q1_positive;
           3'b011: prod_cur = prod_pre + Q2_positive;
           3'b100: prod_cur = prod_pre + Q2_negative;
-          3'b101: prod_cur = prod_pre + Q1 negative;
-          3'b110: prod_cur = prod_pre + Q1 negative;
+          3'b101: prod_cur = prod_pre + Q1_negative;
+          3'b110: prod_cur = prod_pre + Q1_negative;
           3'b111: prod_cur = prod_pre;
         endcase
 
