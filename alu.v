@@ -79,7 +79,9 @@ module alu(
 				end
 				
 				Multiplication: begin
-					C_reg[63:0] <= mul_out[63:0];
+					//C_reg[63:0] <= mul_out[63:0];
+					C_reg[63:32] <= ~mul_out[63:32];
+					C_reg[31:0] <= mul_out[31:0];
 				end
 				
 				Division: begin
