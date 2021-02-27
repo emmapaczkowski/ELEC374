@@ -93,8 +93,8 @@ module alu(
 	//ALU Operations
 	or_32_bit lor(A_reg,B_reg,lor_out);
 	and_32_bit land(A_reg,B_reg,land_out);
-	negate_32_bit neg(A_reg,neg_out);
-	not_32_bit not_module(A_reg,not_out);
+	negate_32_bit neg(B_reg,neg_out);
+	not_32_bit not_module(B_reg,not_out);
 	add_32_bit adder(.Ra(A_reg), .Rb(B_reg),.cin({1'd0}),.sum(adder_sum),.cout(adder_cout));
 	sub_32_bit subtractor(.Ra(A_reg), .Rb(B_reg),.cin({1'd0}),.sum(sub_sum),.cout(sub_cout));
 	ror_32_bit ror_op(A_reg,B_reg,ror_out);

@@ -12,7 +12,7 @@ module not_tb;
 
 parameter	Default = 4'b0000, Reg_load1a= 4'b0001, Reg_load1b= 4'b0010,
 					Reg_load2a= 4'b0011, Reg_load2b = 4'b0100, Reg_load3a = 4'b0101,
-					Reg_load3b = 4'b0110, T0= 4'b0111, T1= 4'b1000,T2= 4'b1001, T3= 4'b1010, T4= 4'b1011;
+					Reg_load3b = 4'b0110, T0= 4'b0111, T1= 4'b1000,T2= 4'b1001, T3= 4'b1010, T4= 4'b1011, T5= 4'b1100;
 reg	[3:0] Present_state= Default;
 
 initial Clear = 0;
@@ -42,6 +42,7 @@ begin
 		T1					:	#40 Present_state = T2;
 		T2					:	#40 Present_state = T3;
 		T3					:	#40 Present_state = T4;
+		T4					:	#40 Present_state = T5;
 		endcase
 	end
 
@@ -104,11 +105,14 @@ begin
 		end
 		T3: begin
 				R2out<= 1; NOT <= 5'b10001; ZLowIn <= 1; 
-				#25 R2out<= 0; ZLowIn <= 0; 
+				#35 R2out<= 0; ZLowIn <= 0; 
 		end
 		T4: begin
 				Zlowout<= 1; R5in <= 1; 
 				#25 Zlowout<= 0; R5in <= 0;
+		end
+		T5: begin
+				#25;
 		end
 	endcase
 end
