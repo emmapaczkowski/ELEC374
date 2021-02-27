@@ -64,7 +64,7 @@ begin
 		end
 		Reg_load1b: begin
 				#10 MDRout<= 1; R2in <= 1;  
-				#15 MDRout<= 0; R2in <= 0;     // initialize R2 with the value $22
+				#15 MDRout<= 0; R2in <= 0;     
 		end
 		Reg_load2a: begin 
 				Mdatain <= 32'h00000002;
