@@ -1,19 +1,39 @@
 `timescale 1ns/10ps
 
 module CPUproject(
-	input wire clk, 
-	input wire clr,
-	input wire Mdatain,
-	input wire [31:0] inPort,
-	output wire [31:0] outPort
+	input PCout,
+	input ZHighout,
+	input ZLowout,
+	input MDRout,
+	input R2out,
+	input R4out,
+	input MARin,
+	input PCin,
+	input MDRin,
+	input IRin,
+	input Yin,
+	input IncPC,
+	input Read,
+   input wire [4:0] operation,			//opcode?
+	input R5in,
+	input R2in,
+	input R4in,
+	input clk, 
+	input [31:0] MDatain,
+	
+	input clr, 
+	input R1in, R3in, R6in, R7in, R8in, R9in, R10in, R11in, R12in, R13in, R14in, R15in, 
+		HIin, LOin, ZHighIn, ZLowIn, Cin
+	//input wire [31:0] inPort,	// for I/O, not needed now
+	//output wire [31:0] outPort
 );
 
 	// Wires being used as inputs to the bus's encoder. Originally they are all initialized to 0.
 	wire R0out = 0;
 	wire R1out = 0;
-	wire R2out = 0;
+	//wire R2out = 0;
 	wire R3out = 0;
-	wire R4out = 0;
+	//wire R4out = 0;
 	wire R5out = 0;
 	wire R6out = 0;
 	wire R7out = 0;
@@ -27,12 +47,9 @@ module CPUproject(
 	wire R15out = 0;
 	wire HIout = 0;
 	wire LOout = 0;
-	wire ZHighout = 0;
-	wire ZLowout = 0;
-	wire PCout = 0;
-	wire MDRout = 0;
 	wire InPortout = 0;
 	wire Cout = 0;
+	//wire ZHighout = 0;
 	
 	// Encoder input and output wires
 	wire [31:0]	encoder_in;
@@ -72,7 +89,7 @@ module CPUproject(
     encoder_32_to_5 encoder(encoder_in, encoder_out);
 	
     // Enable signals for the registers
-    wire R1_enable;
+    /*wire R1_enable;
     wire R2_enable;
     wire R3_enable;
     wire R4_enable;
@@ -92,9 +109,9 @@ module CPUproject(
     wire ZHigh_enable;
     wire ZLow_enable;
     wire PC_enable;
-    wire MDR_enable;
+    //wire MDR_enable;
     wire InPort_enable;
-    wire C_enable; 
+    wire C_enable; */
 	 
 	 wire [31:0] bus_contents;
 	 
@@ -122,42 +139,46 @@ module CPUproject(
 	wire [31:0] PC_data_out;
 	wire [31:0] MDR_data_out;
 	wire [31:0] InPort_data_out;
-	wire [31:0] C_data_out;
+	wire [31:0] Y_data_out;
+	
+	wire [63:0] C_data_out;
  
    // Creating all 32-bit registers
 	reg_32_bits R0(clk, clr, 1'd0 , bus_contents, R0_data_out); 
-	reg_32_bits R1(clk, clr, R1_enable, bus_contents, R1_data_out);
-	reg_32_bits R2(clk, clr, R2_enable, bus_contents, R2_data_out);
-	reg_32_bits R3(clk, clr, R3_enable, bus_contents, R3_data_out);
-	reg_32_bits R4(clk, clr, R4_enable, bus_contents, R4_data_out);
-	reg_32_bits R5(clk, clr, R5_enable, bus_contents, R5_data_out);
-	reg_32_bits R6(clk, clr, R6_enable, bus_contents, R6_data_out);
-	reg_32_bits R7(clk, clr, R7_enable, bus_contents, R7_data_out);
-	reg_32_bits R8(clk, clr, R8_enable, bus_contents, R8_data_out);
-	reg_32_bits R9(clk, clr, R9_enable, bus_contents, R9_data_out);
-	reg_32_bits R10(clk, clr, R10_enable, bus_contents, R10_data_out);
-	reg_32_bits R11(clk, clr, R11_enable, bus_contents, R11_data_out);
-	reg_32_bits R12(clk, clr, R12_enable, bus_contents, R12_data_out);
-	reg_32_bits R13(clk, clr, R13_enable, bus_contents, R13_data_out);
-	reg_32_bits R14(clk, clr, R14_enable, bus_contents, R14_data_out);
-	reg_32_bits R15(clk, clr, R15_enable, bus_contents, R15_data_out);
+	reg_32_bits R1(clk, clr, R1in, bus_contents, R1_data_out);
+	reg_32_bits R2(clk, clr, R2in, bus_contents, R2_data_out);
+	reg_32_bits R3(clk, clr, R3in, bus_contents, R3_data_out);
+	reg_32_bits R4(clk, clr, R4in, bus_contents, R4_data_out);
+	reg_32_bits R5(clk, clr, R5in, bus_contents, R5_data_out);
+	reg_32_bits R6(clk, clr, R6in, bus_contents, R6_data_out);
+	reg_32_bits R7(clk, clr, R7in, bus_contents, R7_data_out);
+	reg_32_bits R8(clk, clr, R8in, bus_contents, R8_data_out);
+	reg_32_bits R9(clk, clr, R9in, bus_contents, R9_data_out);
+	reg_32_bits R10(clk, clr, R10in, bus_contents, R10_data_out);
+	reg_32_bits R11(clk, clr, R11in, bus_contents, R11_data_out);
+	reg_32_bits R12(clk, clr, R12in, bus_contents, R12_data_out);
+	reg_32_bits R13(clk, clr, R13in, bus_contents, R13_data_out);
+	reg_32_bits R14(clk, clr, R14in, bus_contents, R14_data_out);
+	reg_32_bits R15(clk, clr, R15in, bus_contents, R15_data_out);
 	
-	reg_32_bits HI_reg(clk, clr, HI_enable, bus_contents, HI_data_out);
-	reg_32_bits LO_reg(clk, clr, LO_enable, bus_contents, LO_data_out);
-	reg_32_bits ZHigh_reg(clk, clr, ZHigh_enable, bus_contents, ZHigh_data_out);	
-	reg_32_bits ZLow_reg(clk, clr, ZLow_enable, bus_contents, ZLow_data_out);
-	reg_32_bits PC_reg(clk, clr, PC_enable, bus_contents, PC_data_out);
-	reg_32_bits InPort_reg(clk, clr, InPort_enable, bus_contents, InPort_data_out);
-	reg_32_bits C_reg(clk, clr, C_enable, bus_contents, C_data_out);
+	reg_32_bits Y(clk, clr, Yin, bus_contents, Y_data_out);
+	reg_32_bits HI_reg(clk, clr, HIin, bus_contents, HI_data_out);
+	reg_32_bits LO_reg(clk, clr, LOin, bus_contents, LO_data_out);
+	reg_32_bits ZHigh_reg(clk, clr, ZHighIn, C_data_out[63:32], ZHigh_data_out);	
+	reg_32_bits ZLow_reg(clk, clr, ZLowIn, C_data_out[31:0], ZLow_data_out);
+	//reg_32_bits InPort_reg(clk, clr, InPort_enable, bus_contents, InPort_data_out);
+	//reg_32_bits C_reg(clk, clr, Cin, bus_contents, C_reg_out);
 	
-	
+	IncPC_32_bit PC_reg(clk, IncPC, PCin, bus_contents, PC_data_out);
 	// Creating the MDR
 	// Select signal for the MDR's multiplexer
-	wire read_sig;
+	reg read_sig;
+	initial read_sig = 0;
+	wire [31:0] MDR_mux_out;	
 	// Multiplexer used to select an input for the MDR
-	mux_2_to_1 MDMux(MDatain, BusMuxOut, read_sig, MDR_mux_out);
+	mux_2_to_1 MDMux(MDatain, bus_contents, read_sig, MDR_mux_out);
 	// Instatiating the MDR register
-	reg_32_bits MDR_reg(clk, clr, MDR_enable, MDR_mux_out, MDR_data_out);
+	reg_32_bits MDR_reg(clk, clr, MDRin, MDR_mux_out, MDR_data_out);
 	
 	// Multiplexer to select which data to send out on the bus
 	mux_32_to_1 BusMux(
@@ -184,10 +205,24 @@ module CPUproject(
 		.BusMuxIn_PC(PC_data_out),
 		.BusMuxIn_MDR(MDR_data_out),	
 		.BusMuxIn_InPort(InPort_data_out),
-		.C_sign_extended(C_data_out),
+		//.C_sign_extended(C_reg_out), //TODO: take care of this one!
 		.BusMuxOut(bus_contents),
 		.select_signal(encoder_out)
 		);
+
+		
+		
+	//instantiate alu
+	alu the_alu(
+	.clk(clk),
+	.clear(clr), 
+	//.IncPC(IncPC),
+	.A_reg(Y_data_out),
+	.B_reg(bus_contents),
+	.opcode(operation),
+	.C_reg(C_data_out)
+	);
 	
-	endmodule
+endmodule
+
 	

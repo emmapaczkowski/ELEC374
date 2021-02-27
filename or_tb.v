@@ -1,9 +1,9 @@
 `timescale 1ns / 10ps
-module and_tb; 	
+module or_tb; 	
 	reg	PCout, ZHighout, Zlowout, MDRout, R2out, R4out;// add any other signals to see in your simulation
 	reg	MARin, PCin, MDRin, IRin, Yin;
 	reg 	IncPC, Read;
-	reg [4:0] AND; 
+	reg [4:0] OR; 
 	reg R5in, R2in, R4in;
 	reg   R1in, R3in, R6in, R7in, R8in, R9in, R10in, R11in, R12in, R13in, R14in, R15in;
 	reg	HIin, LOin, ZHighIn, Cin, ZLowIn;
@@ -18,7 +18,7 @@ reg	[3:0] Present_state= Default;
 initial Clear = 0;
 
 CPUproject DUT(PCout, ZHighout, Zlowout, MDRout, R2out, R4out, MARin, PCin, MDRin, IRin, Yin, IncPC,Read,
- AND,R5in, R2in, R4in,Clock, Mdatain, Clear, R1in, R3in, R6in, R7in, R8in, R9in, R10in, R11in, 
+ OR,R5in, R2in, R4in,Clock, Mdatain, Clear, R1in, R3in, R6in, R7in, R8in, R9in, R10in, R11in, 
  R12in, R13in, R14in, R15in, HIin, LOin, ZHighIn, ZLowIn, Cin);
 // add test logic here
 
@@ -53,7 +53,7 @@ begin
 				PCout <= 0;   Zlowout <= 0; ZHighout <= 0;  MDRout<= 0;   //initialize the signals
 				R2out <= 0;   R4out <= 0;   MARin <= 0;   ZLowIn <= 0;  
 				PCin <=0;   MDRin <= 0;   IRin  <= 0;   Yin <= 0;  
-				IncPC <= 0;   Read <= 0;   AND <= 0;
+				IncPC <= 0;   Read <= 0;   OR <= 0;
 				R5in <= 0; R2in <= 0; R4in <= 0; Mdatain <= 32'h00000000;
 		end
 		Reg_load1a: begin 
@@ -76,7 +76,7 @@ begin
 				#15 MDRout<= 0; R4in <= 0;// initialize R4 with the value $24 
 		end
 		Reg_load3a: begin 
-				Mdatain <= 32'h00000026;
+				Mdatain <= 32'h00000027;
 				#10 Read <= 1; MDRin <= 1;  
 				#15 Read <= 0; MDRin <= 0;
 		end
@@ -93,7 +93,7 @@ begin
 				#10 PCin <= 0; MDRout <=0; PCout<= 0; MARin <= 0; IncPC <= 0;
 		end
 		T1: begin
-				Mdatain <= 32'h4A920000;   //opcode for “and R5, R2, R4” 110A000E
+				Mdatain <= 32'h4A920000;   //FIGURE OUT
 				Read <= 1; MDRin <= 1;
 				#10 Read <= 0; MDRin <= 0;
 				//Zlowout<= 1; PCin <= 1; 
@@ -108,7 +108,7 @@ begin
 				#15 R2out<= 0; Yin <= 0;
 		end
 		T4: begin
-				R4out<= 1; AND <= 5'b01001; ZLowIn <= 1; 
+				R4out<= 1; OR <= 5'b01010; ZLowIn <= 1; 
 				#25 R4out<= 0; ZLowIn <= 0; 
 		end
 		T5: begin
@@ -118,3 +118,4 @@ begin
 	endcase
 end
 endmodule
+

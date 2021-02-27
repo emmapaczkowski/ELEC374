@@ -14,7 +14,7 @@ wire cout1,cout2,cout3;
 
 CLA4 CLA1(.Ra(Ra[3:0]), .Rb(Rb[3:0]), .cin(cin), .sum(sum[3:0]), .cout(cout1));
 CLA4 CLA2(.Ra(Ra[7:4]), .Rb(Rb[7:4]), .cin(cout1), .sum(sum[7:4]), .cout(cout2));				
-CLA4 CLA3(.Ra(Ra[11:8]), .Rb(Rb[11:8]), .cin(co==ut2), .sum(sum[11:8]), .cout(cout3));
+CLA4 CLA3(.Ra(Ra[11:8]), .Rb(Rb[11:8]), .cin(cout2), .sum(sum[11:8]), .cout(cout3));
 CLA4 CLA4(.Ra(Ra[15:12]), .Rb(Rb[15:12]), .cin(cout3), .sum(sum[15:12]), .cout(cout));
 
 endmodule

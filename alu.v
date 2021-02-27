@@ -1,13 +1,12 @@
 `timescale 1ns/10ps
 
-module ALU(
+module alu(
 	input clk,
 	input clear,
-	input branch_flag,
-	input IncPC,
+	//input branch_flag,
+	//input IncPC,
 	
 	input wire [31:0] A_reg,
-	input wire [31:0] Y_reg,
 	input wire [31:0] B_reg,
 
 	input wire [4:0] opcode,
@@ -22,10 +21,10 @@ module ALU(
 	
 	always @(*) // do the required job in each state
 		begin
-			if (IncPC==1) begin
-					C_reg[31:0] <= IncPC_out[31:0];
-					C_reg[63:32] <= 32'd0;
-			end
+			//if (IncPC==1) begin
+			//		C_reg[31:0] <= IncPC_out[31:0];
+			//		C_reg[63:32] <= 32'd0;
+			//end
 				
 			case (opcode) // assert the required signals in each clock cycle
 				
@@ -92,19 +91,19 @@ module ALU(
 	end
 	
 	//ALU Operations
-	or_32_bit lor(Y_reg,B_reg,lor_out);
-	and_32_bit land(Y_reg,B_reg,land_out);
+	or_32_bit lor(A_reg,B_reg,lor_out);
+	and_32_bit land(A_reg,B_reg,land_out);
 	negate_32_bit neg(A_reg,neg_out);
 	not_32_bit not_module(A_reg,not_out);
-	add_32_bit adder(.Ra(Y_reg), .Rb(B_reg),.cin({1'd0}),.sum(adder_sum),.cout(adder_cout));
-	sub_32_bit subtractor(.Ra(Y_reg), .Rb(B_reg),.cin({1'd0}),.sum(sub_sum),.cout(sub_cout));
-	ror_32_bit ror_op(Y_reg,B_reg,ror_out);
-	rol_32_bit rol_op(Y_reg,B_reg,rol_out);
-	shl_32_bit shl(Y_reg,B_reg,shl_out);
-	shr_32_bit shr(Y_reg,B_reg,shr_out);
-	dib_32_bit div(Y_reg,B_reg,div_out);
-	mul_32_bit mul(Y_reg,B_reg,mul_out);
+	add_32_bit adder(.Ra(A_reg), .Rb(B_reg),.cin({1'd0}),.sum(adder_sum),.cout(adder_cout));
+	sub_32_bit subtractor(.Ra(A_reg), .Rb(B_reg),.cin({1'd0}),.sum(sub_sum),.cout(sub_cout));
+	ror_32_bit ror_op(A_reg,B_reg,ror_out);
+	rol_32_bit rol_op(A_reg,B_reg,rol_out);
+	shl_32_bit shl(A_reg,B_reg,shl_out);
+	shr_32_bit shr(A_reg,B_reg,shr_out);
+	div_32_bit div(A_reg,B_reg,div_out);
+	mul_32_bit mul(A_reg,B_reg,mul_out);
 	//PC Incrementor
-	IncPC_32_bit pcInc(A_reg,IncPC,IncPC_out);
+	//IncPC_32_bit pcInc(A_reg,IncPC,IncPC_out);
 
 endmodule
