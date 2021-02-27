@@ -58,7 +58,7 @@ begin
 				R5in <= 0; R2in <= 0; R4in <= 0; Mdatain <= 32'h00000000;
 		end
 		Reg_load1a: begin 
-				Mdatain<= 32'hffffffff;
+				Mdatain<= 32'h00000007;
 				Read = 0; MDRin = 0;	//the first zero is there for completeness
 				#10 Read <= 1; MDRin <= 1;  
 				#15 Read <= 0; MDRin <= 0;

@@ -79,7 +79,6 @@ module alu(
 				end
 				
 				Multiplication: begin
-					//C_reg[63:0] <= mul_out[63:0];
 					C_reg[63:32] <= ~mul_out[63:32];
 					C_reg[31:0] <= mul_out[31:0];
 				end
@@ -103,7 +102,7 @@ module alu(
 	rol_32_bit rol_op(A_reg,B_reg,rol_out);
 	shl_32_bit shl(A_reg,B_reg,shl_out);
 	shr_32_bit shr(A_reg,B_reg,shr_out);
-	div_32_bit div(A_reg,B_reg,div_out);
+	div_32_bit div(A_reg,B_reg, div_out);
 	mul_32_bit mul(A_reg,B_reg,mul_out);
 	//PC Incrementor
 	//IncPC_32_bit pcInc(A_reg,IncPC,IncPC_out);
