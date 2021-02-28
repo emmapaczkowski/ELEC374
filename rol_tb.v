@@ -20,7 +20,6 @@ initial Clear = 0;
 CPUproject DUT(PCout, ZHighout, Zlowout, MDRout, R2out, R4out, MARin, PCin, MDRin, IRin, Yin, IncPC,Read,
  ROL,R5in, R2in, R4in,Clock, Mdatain, Clear, R1in, R3in, R6in, R7in, R8in, R9in, R10in, R11in, 
  R12in, R13in, R14in, R15in, HIin, LOin, ZHighIn, ZLowIn, Cin);
-// add test logic here
 
 initial 
 	begin
@@ -89,14 +88,13 @@ begin
 				Mdatain <= 32'h00000007; // dummy pc
 				PCin <= 1; MDRout <=1;
 				
-				#10 PCout<= 1; MARin <= 1; IncPC <= 1; //ZLowIn <= 1;
+				#10 PCout<= 1; MARin <= 1; IncPC <= 1; 
 				#10 PCin <= 0; MDRout <=0; PCout<= 0; MARin <= 0; IncPC <= 0;
 		end
 		T1: begin
 				Mdatain <= 32'h4A920000;   
 				Read <= 1; MDRin <= 1;
 				#10 Read <= 0; MDRin <= 0;
-				//Zlowout<= 1; PCin <= 1; 
 				
 		end
 		T2: begin
