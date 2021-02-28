@@ -3,15 +3,13 @@
 module alu(
 	input clk,
 	input clear,
-	//input branch_flag,
-	//input IncPC,
 	
 	input wire [31:0] A_reg,
 	input wire [31:0] B_reg,
 
 	input wire [4:0] opcode,
 
-	output reg [63:0] C_reg //this has to be sent to a high and low 3register
+	output reg [63:0] C_reg 
 );
 	parameter Addition = 5'b00011, Subtraction = 5'b00100, Multiplication = 5'b01110, Division = 5'b01111, Shift_right = 5'b00101, Shift_left = 5'b00110, Rotate_right = 5'b00111, Rotate_left = 5'b01000, Logical_AND = 5'b01001, Logical_OR = 5'b01010, Negate = 5'b10000, _Not = 5'b10001;
 	
@@ -19,14 +17,9 @@ module alu(
 	wire [63:0] mul_out, div_out;
 
 	
-	always @(*) // do the required job in each state
+	always @(*)
 		begin
-			//if (IncPC==1) begin
-			//		C_reg[31:0] <= IncPC_out[31:0];
-			//		C_reg[63:32] <= 32'd0;
-			//end
-				
-			case (opcode) // assert the required signals in each clock cycle
+			case (opcode)
 				
 				Addition: begin
 					C_reg[31:0] <= adder_sum[31:0];
@@ -104,7 +97,5 @@ module alu(
 	shr_32_bit shr(A_reg,B_reg,shr_out);
 	div_32_bit div(A_reg,B_reg, div_out);
 	mul_32_bit mul(A_reg,B_reg,mul_out);
-	//PC Incrementor
-	//IncPC_32_bit pcInc(A_reg,IncPC,IncPC_out);
 
 endmodule

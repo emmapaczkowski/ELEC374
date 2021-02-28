@@ -14,7 +14,7 @@ module CPUproject(
 	input Yin,
 	input IncPC,
 	input Read,
-   input wire [4:0] operation,			//opcode?
+   input wire [4:0] operation,			
 	input R5in,
 	input R2in,
 	input R4in,
@@ -24,16 +24,13 @@ module CPUproject(
 	input clr, 
 	input R1in, R3in, R6in, R7in, R8in, R9in, R10in, R11in, R12in, R13in, R14in, R15in, 
 		HIin, LOin, ZHighIn, ZLowIn, Cin
-	//input wire [31:0] inPort,	// for I/O, not needed now
-	//output wire [31:0] outPort
 );
 
 	// Wires being used as inputs to the bus's encoder. Originally they are all initialized to 0.
+	// R4out and R2out are given as ports to the module.
 	wire R0out = 0;
 	wire R1out = 0;
-	//wire R2out = 0;
 	wire R3out = 0;
-	//wire R4out = 0;
 	wire R5out = 0;
 	wire R6out = 0;
 	wire R7out = 0;
@@ -49,13 +46,11 @@ module CPUproject(
 	wire LOout = 0;
 	wire InPortout = 0;
 	wire Cout = 0;
-	//wire ZHighout = 0;
 	
 	// Encoder input and output wires
 	wire [31:0]	encoder_in;
 	wire [4:0] encoder_out;
 	
-	// Connecting the register output signals to the encoder's input wire
 	assign encoder_in = {
 								{8{1'b0}},
 								Cout,
@@ -87,31 +82,6 @@ module CPUproject(
 
     // Instatiating 32-to-5 encoder for the bus
     encoder_32_to_5 encoder(encoder_in, encoder_out);
-	
-    // Enable signals for the registers
-    /*wire R1_enable;
-    wire R2_enable;
-    wire R3_enable;
-    wire R4_enable;
-    wire R5_enable;
-    wire R6_enable;
-    wire R7_enable;
-    wire R8_enable;
-    wire R9_enable;
-    wire R10_enable;
-    wire R11_enable;
-    wire R12_enable;
-    wire R13_enable;
-    wire R14_enable;
-    wire R15_enable;
-    wire HI_enable;
-    wire LO_enable;
-    wire ZHigh_enable;
-    wire ZLow_enable;
-    wire PC_enable;
-    //wire MDR_enable;
-    wire InPort_enable;
-    wire C_enable; */
 	 
 	 wire [31:0] bus_contents;
 	 
@@ -166,8 +136,6 @@ module CPUproject(
 	reg_32_bits LO_reg(clk, clr, LOin, bus_contents, LO_data_out);
 	reg_32_bits ZHigh_reg(clk, clr, ZHighIn, C_data_out[63:32], ZHigh_data_out);	
 	reg_32_bits ZLow_reg(clk, clr, ZLowIn, C_data_out[31:0], ZLow_data_out);
-	//reg_32_bits InPort_reg(clk, clr, InPort_enable, bus_contents, InPort_data_out);
-	//reg_32_bits C_reg(clk, clr, Cin, bus_contents, C_reg_out);
 	
 	IncPC_32_bit PC_reg(clk, IncPC, PCin, bus_contents, PC_data_out);
 	// Creating the MDR
@@ -205,18 +173,14 @@ module CPUproject(
 		.BusMuxIn_PC(PC_data_out),
 		.BusMuxIn_MDR(MDR_data_out),	
 		.BusMuxIn_InPort(InPort_data_out),
-		//.C_sign_extended(C_reg_out), //TODO: take care of this one!
 		.BusMuxOut(bus_contents),
 		.select_signal(encoder_out)
 		);
 
-		
-		
 	//instantiate alu
 	alu the_alu(
 	.clk(clk),
 	.clear(clr), 
-	//.IncPC(IncPC),
 	.A_reg(Y_data_out),
 	.B_reg(bus_contents),
 	.opcode(operation),
