@@ -89,14 +89,13 @@ begin
 				Mdatain <= 32'h00000007; // dummy pc
 				PCin <= 1; MDRout <=1;
 				
-				#10 PCout<= 1; MARin <= 1; IncPC <= 1; //ZLowIn <= 1;
+				#10 PCout<= 1; MARin <= 1; IncPC <= 1; 
 				#10 PCin <= 0; MDRout <=0; PCout<= 0; MARin <= 0; IncPC <= 0;
 		end
 		T1: begin
-				Mdatain <= 32'h4A920000;   //FIGURE OUT
+				Mdatain <= 32'h4A920000;  
 				Read <= 1; MDRin <= 1;
 				#10 Read <= 0; MDRin <= 0;
-				//Zlowout<= 1; PCin <= 1; 
 				
 		end
 		T2: begin
