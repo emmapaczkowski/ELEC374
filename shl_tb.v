@@ -64,7 +64,7 @@ begin
 		end
 		Reg_load1b: begin
 				#10 MDRout<= 1; R2in <= 1;  
-				#15 MDRout<= 0; R2in <= 0;     // initialize R2 with the value $22
+				#15 MDRout<= 0; R2in <= 0;    
 		end
 		Reg_load2a: begin 
 				Mdatain <= 32'h00000002;
@@ -73,7 +73,7 @@ begin
 		end
 		Reg_load2b: begin
 				#10 MDRout<= 1; R4in <= 1;  
-				#15 MDRout<= 0; R4in <= 0;// initialize R4 with the value $24 
+				#15 MDRout<= 0; R4in <= 0;
 		end
 		Reg_load3a: begin 
 				Mdatain <= 32'h00000027;
@@ -82,21 +82,20 @@ begin
 		end
 		Reg_load3b: begin
 				#10 MDRout<= 1; R5in <= 1;  
-				#15 MDRout<= 0; R5in <= 0;// initialize R5 with the value $26 
+				#15 MDRout<= 0; R5in <= 0;
 		end
 	
 		T0: begin//see if you need to de-assert these signals
 				Mdatain <= 32'h00000007; // dummy pc
 				PCin <= 1; MDRout <=1;
 				
-				#10 PCout<= 1; MARin <= 1; IncPC <= 1; //ZLowIn <= 1;
+				#10 PCout<= 1; MARin <= 1; IncPC <= 1; 
 				#10 PCin <= 0; MDRout <=0; PCout<= 0; MARin <= 0; IncPC <= 0;
 		end
 		T1: begin
-				Mdatain <= 32'h4A920000;   //FIGURE OUT
+				Mdatain <= 32'h4A920000;   
 				Read <= 1; MDRin <= 1;
 				#10 Read <= 0; MDRin <= 0;
-				//Zlowout<= 1; PCin <= 1; 
 				
 		end
 		T2: begin
@@ -118,4 +117,3 @@ begin
 	endcase
 end
 endmodule
-
