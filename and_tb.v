@@ -96,7 +96,6 @@ begin
 				Mdatain <= 32'h4A920000;   
 				Read <= 1; MDRin <= 1;
 				#10 Read <= 0; MDRin <= 0;
-				//Zlowout<= 1; PCin <= 1; 
 				
 		end
 		T2: begin
