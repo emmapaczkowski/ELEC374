@@ -14,7 +14,7 @@ module CPUproject(
 	input Yin,
 	input IncPC,
 	input Read,
-   input wire [4:0] operation,			
+   input [4:0] operation,			
 	input R5in,
 	input R2in,
 	input R4in,
@@ -23,7 +23,8 @@ module CPUproject(
 	
 	input clr, 
 	input R1in, R3in, R6in, R7in, R8in, R9in, R10in, R11in, R12in, R13in, R14in, R15in, 
-		HIin, LOin, ZHighIn, ZLowIn, Cin
+		HIin, LOin, ZHighIn, ZLowIn, Cin, RAM_write_en,
+	input [31:0] bus_contents
 );
 
 	// Wires being used as inputs to the bus's encoder. Originally they are all initialized to 0.
@@ -83,7 +84,7 @@ module CPUproject(
     // Instatiating 32-to-5 encoder for the bus
     encoder_32_to_5 encoder(encoder_in, encoder_out);
 	 
-	 wire [31:0] bus_contents;
+	 //wire [31:0] bus_contents;
 	 
 	 //Inputs to the bus's 32-to_1 multiplexer
 	 wire [31:0] R0_data_out;
@@ -110,6 +111,8 @@ module CPUproject(
 	wire [31:0] MDR_data_out;
 	wire [31:0] InPort_data_out;
 	wire [31:0] Y_data_out;
+	wire [31:0] RAM_data_out;
+	wire [31:0] MAR_data_out;
 	
 	wire [63:0] C_data_out;
  
@@ -138,15 +141,22 @@ module CPUproject(
 	reg_32_bits ZLow_reg(clk, clr, ZLowIn, C_data_out[31:0], ZLow_data_out);
 	
 	IncPC_32_bit PC_reg(clk, IncPC, PCin, bus_contents, PC_data_out);
+	
+	ram ram1(MDR_data_out, MAR_data_out, RAM_write_en, clk, RAM_data_out);
+	
+	
 	// Creating the MDR
 	// Select signal for the MDR's multiplexer
 	reg read_sig;
 	initial read_sig = 0;
 	wire [31:0] MDR_mux_out;	
 	// Multiplexer used to select an input for the MDR
-	mux_2_to_1 MDMux(MDatain, bus_contents, read_sig, MDR_mux_out);
+	mux_2_to_1 MDMux(RAM_data_out, bus_contents, read_sig, MDR_mux_out);		// CHANGED 1ST INPUT FROM MDATAIN TO RAMDATAOUT
 	// Instatiating the MDR register
 	reg_32_bits MDR_reg(clk, clr, MDRin, MDR_mux_out, MDR_data_out);
+	
+	// Instatiating the MAR register
+	reg_32_bits MAR(clk, clr, MARin, bus_contents, MAR_data_out);
 	
 	// Multiplexer to select which data to send out on the bus
 	mux_32_to_1 BusMux(
