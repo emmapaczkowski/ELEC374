@@ -22,9 +22,9 @@ module CPUproject(
 	input [31:0] MDatain,
 	
 	input clr, 
-	input R1in, R3in, R6in, R7in, R8in, R9in, R10in, R11in, R12in, R13in, R14in, R15in, 
-		HIin, LOin, ZHighIn, ZLowIn, Cin, RAM_write_en,
-	input [31:0] bus_contents
+	input HIin, LOin, ZHighIn, ZLowIn, Cin, RAM_write_en, GRA, GRB, GRC, R_in, R_out, Baout, enableCon,
+	input [31:0] bus_contents,
+	input [15:0] R_enableIn, Rout_in
 );
 
 	// Wires being used as inputs to the bus's encoder. Originally they are all initialized to 0.
@@ -47,6 +47,14 @@ module CPUproject(
 	wire LOout = 0;
 	wire InPortout = 0;
 	wire Cout = 0;
+	
+	wire [31:0] BusMuxInR0_to_AND;
+	
+	wire [15:0] enableR_IR; 
+	wire [15:0] Rout_IR;
+	reg  [15:0]  enableR; 
+	reg  [15:0]  Rout;
+	wire [3:0]  decoder_in;
 	
 	// Encoder input and output wires
 	wire [31:0]	encoder_in;
@@ -86,6 +94,14 @@ module CPUproject(
 	 
 	 //wire [31:0] bus_contents;
 	 
+	 
+		always@(*)begin		
+			if (enableR_IR)enableR<=enableR_IR; 
+			else enableR<=R_enableIn;
+			if (Rout_IR)Rout<=Rout_IR; 
+			else Rout<=Rout_in;
+		end 
+	 
 	 //Inputs to the bus's 32-to_1 multiplexer
 	 wire [31:0] R0_data_out;
 	wire [31:0] R1_data_out;
@@ -113,26 +129,29 @@ module CPUproject(
 	wire [31:0] Y_data_out;
 	wire [31:0] RAM_data_out;
 	wire [31:0] MAR_data_out;
-	
+	wire [31:0] IR_data_out;
+	wire [31:0] C_sign_extended;
 	wire [63:0] C_data_out;
+	wire Con_out;
  
    // Creating all 32-bit registers
-	reg_32_bits R0(clk, clr, 1'd0 , bus_contents, R0_data_out); 
-	reg_32_bits R1(clk, clr, R1in, bus_contents, R1_data_out);
-	reg_32_bits R2(clk, clr, R2in, bus_contents, R2_data_out);
-	reg_32_bits R3(clk, clr, R3in, bus_contents, R3_data_out);
-	reg_32_bits R4(clk, clr, R4in, bus_contents, R4_data_out);
-	reg_32_bits R5(clk, clr, R5in, bus_contents, R5_data_out);
-	reg_32_bits R6(clk, clr, R6in, bus_contents, R6_data_out);
-	reg_32_bits R7(clk, clr, R7in, bus_contents, R7_data_out);
-	reg_32_bits R8(clk, clr, R8in, bus_contents, R8_data_out);
-	reg_32_bits R9(clk, clr, R9in, bus_contents, R9_data_out);
-	reg_32_bits R10(clk, clr, R10in, bus_contents, R10_data_out);
-	reg_32_bits R11(clk, clr, R11in, bus_contents, R11_data_out);
-	reg_32_bits R12(clk, clr, R12in, bus_contents, R12_data_out);
-	reg_32_bits R13(clk, clr, R13in, bus_contents, R13_data_out);
-	reg_32_bits R14(clk, clr, R14in, bus_contents, R14_data_out);
-	reg_32_bits R15(clk, clr, R15in, bus_contents, R15_data_out);
+	assign R0_data_out = {32{!Baout}} & BusMuxInR0_to_AND;
+	reg_32_bits R0(clk, clr, enableR[0], bus_contents, BusMuxInR0_to_AND); 
+	reg_32_bits R1(clk, clr, enableR[1], bus_contents, R1_data_out);
+	reg_32_bits R2(clk, clr, enableR[2], bus_contents, R2_data_out);
+	reg_32_bits R3(clk, clr, enableR[3], bus_contents, R3_data_out);
+	reg_32_bits R4(clk, clr, enableR[4], bus_contents, R4_data_out);
+	reg_32_bits R5(clk, clr, enableR[5], bus_contents, R5_data_out);
+	reg_32_bits R6(clk, clr, enableR[6], bus_contents, R6_data_out);
+	reg_32_bits R7(clk, clr, enableR[7], bus_contents, R7_data_out);
+	reg_32_bits R8(clk, clr, enableR[8], bus_contents, R8_data_out);
+	reg_32_bits R9(clk, clr, enableR[9], bus_contents, R9_data_out);
+	reg_32_bits R10(clk, clr, enableR[10], bus_contents, R10_data_out);
+	reg_32_bits R11(clk, clr, enableR[11], bus_contents, R11_data_out);
+	reg_32_bits R12(clk, clr, enableR[12], bus_contents, R12_data_out);
+	reg_32_bits R13(clk, clr, enableR[13], bus_contents, R13_data_out);
+	reg_32_bits R14(clk, clr, enableR[14], bus_contents, R14_data_out);
+	reg_32_bits R15(clk, clr, enableR[15], bus_contents, R15_data_out);
 	
 	reg_32_bits Y(clk, clr, Yin, bus_contents, Y_data_out);
 	reg_32_bits HI_reg(clk, clr, HIin, bus_contents, HI_data_out);
@@ -141,6 +160,11 @@ module CPUproject(
 	reg_32_bits ZLow_reg(clk, clr, ZLowIn, C_data_out[31:0], ZLow_data_out);
 	
 	IncPC_32_bit PC_reg(clk, IncPC, PCin, bus_contents, PC_data_out);
+	
+	reg_32_bits IR(clk, clr, IRin, bus_contents, IR_data_out);
+	select_encode_logic IRlogic(IR_data_out, GRA, GRB, GRC, R_in, R_out, Baout, operation, C_sign_extended, enableR_IR, Rout_IR, decoder_in);
+	
+	conff_logic conff1(IR_data_out[20:19], bus_contents, enableCon, con_out);
 	
 	ram ram1(MDR_data_out, MAR_data_out, RAM_write_en, clk, RAM_data_out);
 	
