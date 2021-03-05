@@ -13,7 +13,7 @@ module conff_logic(input [1:0] IR_bits, input signed [31:0] bus, input CON_input
 	assign positive		= (bus[31] == 0) ? 1'b1 : 1'b0;
 	assign negative 	= (bus[31] == 1) ? 1'b1 : 1'b0;
 	
-	decoder	dec(IR_bits, decoderOutput);
+	decoder_2_to_4	dec(IR_bits, decoderOutput);
 	assign branchFlag=(decoderOutput[0]&equal|decoderOutput[1]&notEqual|decoderOutput[2]&positive|decoderOutput[3]&negative);
 	ff_logic CONff(.clk(CON_input), .D(branchFlag), .Q(CON_output));
 endmodule

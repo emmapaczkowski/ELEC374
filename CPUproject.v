@@ -13,8 +13,7 @@ module CPUproject(
 	input IRin,
 	input Yin,
 	input IncPC,
-	input Read,
-   input [4:0] operation,			
+	input Read,		
 	input R5in,
 	input R2in,
 	input R4in,
@@ -23,8 +22,12 @@ module CPUproject(
 	
 	input clr, 
 	input HIin, LOin, ZHighIn, ZLowIn, Cin, RAM_write_en, GRA, GRB, GRC, R_in, R_out, Baout, enableCon,
-	input [31:0] bus_contents,
-	input [15:0] R_enableIn, Rout_in
+	input [15:0] R_enableIn, Rout_in,
+	input enableInputPort, enableOutputPort, 
+	input wire[31:0] InPort_input, 
+	output wire[31:0] OutPort_output,		//OUTPUT OR INPUT
+	output [31:0] bus_contents,
+	output [4:0] operation
 );
 
 	// Wires being used as inputs to the bus's encoder. Originally they are all initialized to 0.
@@ -132,6 +135,7 @@ module CPUproject(
 	wire [31:0] IR_data_out;
 	wire [31:0] C_sign_extended;
 	wire [63:0] C_data_out;
+	wire [31:0] Input_Port_dataout;
 	wire Con_out;
  
    // Creating all 32-bit registers
@@ -158,6 +162,9 @@ module CPUproject(
 	reg_32_bits LO_reg(clk, clr, LOin, bus_contents, LO_data_out);
 	reg_32_bits ZHigh_reg(clk, clr, ZHighIn, C_data_out[63:32], ZHigh_data_out);	
 	reg_32_bits ZLow_reg(clk, clr, ZLowIn, C_data_out[31:0], ZLow_data_out);
+	
+	reg_32_bits input_port(clk,clr,enableInputPort,InPort_input, Input_Port_dataout);
+	reg_32_bits output_port(clk,clr,enableOutputPort, bus_contents, OutPort_output);
 	
 	IncPC_32_bit PC_reg(clk, IncPC, PCin, bus_contents, PC_data_out);
 	
