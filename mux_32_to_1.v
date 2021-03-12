@@ -28,7 +28,7 @@ module mux_32_to_1(
 	input [31:0] BusMuxIn_PC,
 	input [31:0] BusMuxIn_MDR,	
 	input [31:0] BusMuxIn_InPort,
-	//input [31:0] C_sign_extended,
+	input [31:0] C_sign_extended,
 	
 	// Multiplexer's output that feeds to the bus
 	output reg [31:0] BusMuxOut,
@@ -64,7 +64,7 @@ always@(*) begin
 	 5'd20: BusMuxOut <= BusMuxIn_PC[31:0];
          5'd21: BusMuxOut <= BusMuxIn_MDR[31:0];
          5'd22: BusMuxOut <= BusMuxIn_InPort[31:0];
-         //5'd23: BusMuxOut <= C_sign_extended[31:0];
+         5'd23: BusMuxOut <= C_sign_extended[31:0];
 	 default: BusMuxOut <= 32'd0;
       endcase
    end

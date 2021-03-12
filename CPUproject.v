@@ -82,7 +82,7 @@ module CPUproject(
    // Creating all 32-bit registers
 	assign R0_data_out = {32{!Baout}} & BusMuxInR0_to_AND;
 	reg_32_bits R0(clk, clr, enableR[0], bus_contents, BusMuxInR0_to_AND); 
-	reg_32_bits R1(clk, clr, enableR[1], bus_contents, R1_data_out);
+	reg_32_bits #(32'h00000008) R1(clk, clr, enableR[1], bus_contents, R1_data_out);
 	reg_32_bits R2(clk, clr, enableR[2], bus_contents, R2_data_out);
 	reg_32_bits R3(clk, clr, enableR[3], bus_contents, R3_data_out);
 	reg_32_bits R4(clk, clr, enableR[4], bus_contents, R4_data_out);
@@ -114,22 +114,30 @@ module CPUproject(
 	
 	conff_logic conff1(IR_data_out[20:19], bus_contents, enableCon, con_out);
 	
-	ram ram1(MDR_data_out, MAR_data_out, RAM_write_en, clk, RAM_data_out);
-	
+	//ram ram1(MDR_data_out, MAR_data_out, RAM_write_en, clk, RAM_data_out);	//custom ram
+	//memram_inst ram2(MAR_data_out, clk, MDR_data_out, RAM_write_en, RAM_data_out);	// built-in modelsim ram
 	
 	// Creating the MDR
 	// Select signal for the MDR's multiplexer
-	reg read_sig;
-	initial read_sig = 0;
+	//reg read_sig;
+	//initial read_sig = 0;
 	wire [31:0] MDR_mux_out;	
 	// Multiplexer used to select an input for the MDR
-	//mux_2_to_1 MDMux(RAM_data_out, bus_contents, read_sig, MDR_mux_out);		// CHANGED 1ST INPUT FROM MDATAIN TO RAMDATAOUT
-	mux_3_to_1 MDMux(bus_contents,RAM_data_out,MDatain,Read, MDR_mux_out);
+	mux_2_to_1 MDMux(bus_contents, RAM_data_out, Read, MDR_mux_out);		// CHANGED 1ST INPUT FROM MDATAIN TO RAMDATAOUT
+	//mux_3_to_1 MDMux(bus_contents,RAM_data_out,MDatain,Read, MDR_mux_out);
 	// Instatiating the MDR register
 	reg_32_bits MDR_reg(clk, clr, MDRin, MDR_mux_out, MDR_data_out);
 	
 	// Instatiating the MAR register
 	reg_32_bits MAR(clk, clr, MARin, bus_contents, MAR_data_out);
+	
+	memoryRam	memoryRam_inst (
+	.address ( MAR_data_out ),
+	.clock ( clk ),
+	.data ( MDR_data_out ),
+	.wren ( RAM_write_en ),
+	.q ( RAM_data_out )
+	);
 	
 	// Multiplexer to select which data to send out on the bus
 	mux_32_to_1 BusMux(
@@ -156,8 +164,9 @@ module CPUproject(
 		.BusMuxIn_PC(PC_data_out),
 		.BusMuxIn_MDR(MDR_data_out),	
 		.BusMuxIn_InPort(InPort_data_out),
+		.C_sign_extended(C_sign_extended),
 		.BusMuxOut(bus_contents),
-		.select_signal(encoder_out)
+		.select_signal(bus_encoder_signal)
 		);
 
 	//instantiate alu

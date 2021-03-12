@@ -1,6 +1,6 @@
 `timescale 1ns/10ps
 
-module addi_tb;
+module andi_tb;
 	reg clk, clr;
 	reg IncPC, CON_enable; //Not actually implemented in Datapath yet
 	reg [31:0] Mdatain;
@@ -111,7 +111,7 @@ always @(Present_state)
 				R0_R15_enable<= 16'd0; R0_R15_out<=16'd0;
 			end	
 						
-			//insruction: addi r2, r1, 2, where r1 is 8
+			//insruction: andi r2, r1, 5, where r1 is c. This is 61080005
 /*			
 Reg_load1a: begin
 	//Mdatain <= 32'h0000000F; 

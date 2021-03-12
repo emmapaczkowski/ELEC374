@@ -1,6 +1,6 @@
 `timescale 1ns/10ps
 
-module reg_32_bits(
+module reg_32_bits #(parameter qInitial = 0)(
 	input wire clk, 
 	input wire clr,
 	input wire enable,
@@ -8,6 +8,8 @@ module reg_32_bits(
 	output reg [31:0] q
 );
 		
+	
+	initial q = qInitial;
 	always@(posedge clk) 
 	begin
 		if (clr) begin
