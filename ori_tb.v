@@ -112,31 +112,6 @@ always @(Present_state)
 			end	
 						
 			//insruction: ori r2, r1, 2, where r1 is 8. This is 69080002
-/*			
-Reg_load1a: begin
-	//Mdatain <= 32'h0000000F; 
-	
-	MDR_enable <= 1; MDR_read<=1;
-	//#20 MDR_enable <= 0;MDR_read<=0;
-end
-
-Reg_load1b: begin // initialize R1 with the value 15  
-	MDR_enable <= 0;MDR_read<=0;
-	MDRout <= 1; R0_R15_enable<=16'h0002;//R1_enable <= 1;    
-	//#20 MDRout <= 0; R0_R15_enable<= 16'd0;//R1_enable <= 0; 
-end
-
-Reg_load3a: begin //Load PC with start of program in RAM
-	MDRout <= 0; R0_R15_enable<= 16'd0;
-	MDR_enable <= 1; MDR_read<=1;
-	//#20 MDR_enable <= 0; MDR_read<=0; 
-end
-
-Reg_load3b: begin
-	MDR_enable <= 0; MDR_read<=0;
-	MDRout <= 1; PC_enable<=1;	
-	//#15 MDRout <= 0; PC_enable<=0;
-end*/
 
 T0: begin 
 	MDRout <= 0; PC_enable<=0;

@@ -1,4 +1,3 @@
-/*
 `timescale 1ns/10ps
 
 module ldi_tb;
@@ -7,7 +6,7 @@ module ldi_tb;
 	reg [31:0] Mdatain;
 	wire [31:0] bus_contents;
 	reg RAM_write, MDR_enable, MDRout, MAR_enable, IR_enable;
-	reg [2:0] MDR_read;
+	reg MDR_read;
 	reg R_enable, Rout;
 	reg [15:0] R0_R15_enable, R0_R15_out;
 	reg Gra, Grb, Grc;
@@ -107,61 +106,47 @@ always @(Present_state)
 				BAout<=0; Cout<=0;
 				InPortout<=0; ZHighout<=0; LOout<=0; HIout<=0; 
 				HI_enable<=0; LO_enable<=0;
-				Rout<=0;R_enable<=0;MDR_read<=2'b00;
+				Rout<=0;R_enable<=0;MDR_read<=0;
 				R0_R15_enable<= 16'd0; R0_R15_out<=16'd0;
 			end	
 						
-			//insruction: 00800055 	(ld r1, 85)	
-			Reg_load1a: begin
-				Mdatain <= 32'h00000000;     //Data to be inserted into R0
-				MDR_enable <= 1; MDR_read<=3'd2;
-				#15 MDR_enable <= 0;MDR_read<=3'd0;
-			end
-			
-Reg_load1b: begin    
-	MDRout <= 1; R0_R15_enable<=16'h0001; //to enable R0 
-#15 MDRout <= 0; R0_R15_enable<= 16'd0;
-end
-	
-Reg_load3a: begin
-	Mdatain <= 32'h00000000;   
-	MDR_enable <= 1; MDR_read<=3'd2;
-     #15 MDR_enable <= 0; MDR_read<=3'd0; //Load PC with what is in     RAM at location Zero
-end
-			
-Reg_load3b: begin
-	MDRout <= 1; PC_enable<=1;
-	#15 MDRout <= 0; PC_enable<=0;
-end
-			
-T0: begin
-     PCout <= 1; MAR_enable <= 1; IncPC<=1; ZHighIn <=1; ZLowIn <=1;
-     #15 PCout <= 0; MAR_enable <= 0; IncPC<=0; ZHighIn <=0; ZLowIn <=0;
+			//first test: (ldi r1, 7). Instruction is 08800007
+			//second test: ldi r1, 2(r2), where r2 is 2 and address 4 has 15. Instruction is 08900002.
+
+T0: begin 
+	MDRout <= 0; PC_enable<=0;
+	PCout <= 1; MAR_enable <= 1; 
+	//#15 PCout <= 0; MAR_enable <= 0; 
 end
 
-T1: begin
-     MDR_enable <= 1; MDR_read<=3'd1; ZLowout<=1; PC_enable<=1;        //Loads MDR from RAM output
-     #15 MDR_enable <= 0; MDR_read<=3'd0;ZLowout<=0; PC_enable<=0;
+T1: begin //Loads MDR from RAM output
+		PCout <= 0; MAR_enable <= 0; 
+		MDR_enable <= 1; MDR_read<=1;   
+	//#15 MDR_enable <= 0; MDR_read<=0;
 end
-			
+
 T2: begin
+	MDR_enable <= 0; MDR_read<=0;
 	MDRout <= 1; IR_enable <= 1;
-	#15 MDRout <= 0; IR_enable <= 0;			
+	//#15 MDRout <= 0; IR_enable <= 0;			
 end
-			
+
 T3: begin
-	Grb<=1; BAout<=1; Y_enable<=1;
-     #15 Grb<=0; BAout<=0;Y_enable<=0;
+	MDRout <= 0; IR_enable <= 0;			
+	Grb<=1;BAout<=1;Y_enable<=1;
+	//#15 Grb<=0;Rout<=0;Y_enable<=0;
 end
-			
+
 T4: begin
-	Cout<=1; ZHighIn <=1; ZLowIn <=1;
-	#15 Cout<=0; ZHighIn <=0; ZLowIn <=0;
+	Grb<=0;BAout<=0;Y_enable<=0;
+	Cout<=1;ZHighIn <= 1;  ZLowIn <= 1;
+	//#15 Cout<=0; ZHighIn <= 0;  ZLowIn <= 0;
 end
-			
+
 T5: begin
- ZLowout <= 1; GRA <= 1; MAR_enable <= 1;
- #15 ZLowout <= 0; MAR_enable <= 0; GRA <= 0; Rout <= 1;
+	Cout<=0; ZHighIn <= 0;  ZLowIn <= 0;
+	ZLowout <= 1;Gra<=1;R_enable<=1;
+	#40 ZLowout <= 0;Gra<=1;Rout<=1;R_enable<=0;
 end
 
 
@@ -172,4 +157,3 @@ end
 endmodule
 
 
-*/

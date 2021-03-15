@@ -83,7 +83,7 @@ module CPUproject(
 	assign R0_data_out = {32{!Baout}} & BusMuxInR0_to_AND;
 	reg_32_bits R0(clk, clr, enableR[0], bus_contents, BusMuxInR0_to_AND); 
 	reg_32_bits #(32'h00000008) R1(clk, clr, enableR[1], bus_contents, R1_data_out);
-	reg_32_bits R2(clk, clr, enableR[2], bus_contents, R2_data_out);
+	reg_32_bits #(32'h00000002) R2(clk, clr, enableR[2], bus_contents, R2_data_out);
 	reg_32_bits R3(clk, clr, enableR[3], bus_contents, R3_data_out);
 	reg_32_bits R4(clk, clr, enableR[4], bus_contents, R4_data_out);
 	reg_32_bits R5(clk, clr, enableR[5], bus_contents, R5_data_out);
