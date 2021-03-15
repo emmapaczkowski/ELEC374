@@ -2,7 +2,7 @@
 
 module ld_tb;
 	reg clk, clr;
-	reg IncPC, CON_enable; //Not actually implemented in Datapath yet
+	reg IncPC, CON_enable; 
 	reg [31:0] Mdatain;
 	wire [31:0] bus_contents;
 	reg RAM_write, MDR_enable, MDRout, MAR_enable, IR_enable;
@@ -57,12 +57,8 @@ CPUproject DUT(
 	.InPort_input(InPort_input),
 	.OutPort_output(OutPort_output),
 	.bus_contents(bus_contents),
-	.operation(opcode)
-
-	              	
-	//.Yout(Yout),                  	
+	.operation(opcode),                  	
 );
-
 
 initial
 	begin
@@ -123,25 +119,21 @@ end
 T1: begin //Loads MDR from RAM output
 		PCout <= 0; MAR_enable <= 0; IncPC <= 0; ZHighIn <= 0;  ZLowIn <= 0;
 		MDR_enable <= 1; MDR_read<=1; ZLowout <= 1; PC_enable <= 1;
-	//#15 MDR_enable <= 0; MDR_read<=0;
 end
 
 T2: begin
 	MDR_enable <= 0; MDR_read<=0;ZLowout <= 0; PC_enable <= 0;
-	MDRout <= 1; IR_enable <= 1;
-	//#15 MDRout <= 0; IR_enable <= 0;			
+	MDRout <= 1; IR_enable <= 1;			
 end
 
 T3: begin
 	MDRout <= 0; IR_enable <= 0;			
 	Grb<=1;BAout<=1;Y_enable<=1;
-	//#15 Grb<=0;Rout<=0;Y_enable<=0;
 end
 
 T4: begin
 	Grb<=0;BAout<=0;Y_enable<=0;
 	Cout<=1;ZHighIn <= 1;  ZLowIn <= 1;
-	//#15 Cout<=0; ZHighIn <= 0;  ZLowIn <= 0;
 end
 
 T5: begin
@@ -158,11 +150,8 @@ T7: begin
 	MDRout <= 1; Gra <= 1; R_enable <= 1;
 end
 
-
 endcase
 
 end
 
 endmodule
-
-
