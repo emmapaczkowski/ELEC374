@@ -2,7 +2,7 @@
 
 module in_tb;
 	reg clk, clr;
-	reg IncPC, CON_enable; //Not actually implemented in Datapath yet
+	reg IncPC, CON_enable; 
 	reg [31:0] Mdatain;
 	wire [31:0] bus_contents;
 	reg RAM_write, MDR_enable, MDRout, MAR_enable, IR_enable;
@@ -58,9 +58,7 @@ CPUproject DUT(
 	.OutPort_output(OutPort_output),
 	.bus_contents(bus_contents),
 	.operation(opcode)
-
-	              	
-	//.Yout(Yout),                  	
+               	
 );
 
 
@@ -128,12 +126,6 @@ T3: begin
 	MDRout <= 0; IR_enable <= 0;			
 	Gra<=1;R_enable<=1; InPortout <= 1;
 end
-
-
 endcase
-
 end
-
 endmodule
-
-
