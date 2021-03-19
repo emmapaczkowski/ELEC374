@@ -113,10 +113,9 @@ always @(Present_state)
 			end	
 						
 			//first test:  (st 7, r1) where r1 is initially 8. Instruction is 10800007
-			//second test: (st 7(R1), R1) where r1 is initially 8. Instruction is 10880007
+			//second test: (st 7(R1), R1) where r1 is initially 8. Instruction is 10880007. Value of R1 should be stored at address 7+[r1] = 15.
 T0: begin 
 	PCout <= 1; MAR_enable <= 1; IncPC <= 1; ZHighIn <= 1;  ZLowIn <= 1;
-	//#15 PCout <= 0; MAR_enable <= 0; 
 end
 
 T1: begin //Loads MDR from RAM output
