@@ -26,7 +26,6 @@ module CPUproject(
 	output [4:0] operation
 );
 
-	
 	wire [31:0] BusMuxInR0_to_AND;
 	
 	wire [15:0] enableR_IR; 
@@ -114,16 +113,10 @@ module CPUproject(
 	
 	conff_logic conff1(IR_data_out[20:19], bus_contents, enableCon, con_out);
 	
-	//ram ram1(MDR_data_out, MAR_data_out, RAM_write_en, clk, RAM_data_out);	//custom ram
-	//memram_inst ram2(MAR_data_out, clk, MDR_data_out, RAM_write_en, RAM_data_out);	// built-in modelsim ram
-	
-	// Creating the MDR
-	// Select signal for the MDR's multiplexer
-	//reg read_sig;
 	//initial read_sig = 0;
 	wire [31:0] MDR_mux_out;	
 	// Multiplexer used to select an input for the MDR
-	mux_2_to_1 MDMux(bus_contents, RAM_data_out, Read, MDR_mux_out);		// CHANGED 1ST INPUT FROM MDATAIN TO RAMDATAOUT
+	mux_2_to_1 MDMux(bus_contents, RAM_data_out, Read, MDR_mux_out);			
 	//mux_3_to_1 MDMux(bus_contents,RAM_data_out,MDatain,Read, MDR_mux_out);
 	// Instatiating the MDR register
 	reg_32_bits MDR_reg(clk, clr, MDRin, MDR_mux_out, MDR_data_out);
@@ -183,5 +176,3 @@ module CPUproject(
 	);
 	
 endmodule
-
-	
