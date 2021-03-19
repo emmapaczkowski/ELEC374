@@ -112,9 +112,8 @@ always @(Present_state)
 				R0_R15_enable<= 16'd0; R0_R15_out<=16'd0;
 			end	
 						
-			//first test:  (st 7, r1) where r1 is initially 8. Address 7 has value 15. Instruction is 10800007
-			//second test: ld r1, 2(r2), where r2 is 2 and address 4 has 15. Instruction is 00900002.
-
+			//first test:  (st 7, r1) where r1 is initially 8. Instruction is 10800007
+			//second test: (st 7(R1), R1) where r1 is initially 8. Instruction is 10880007
 T0: begin 
 	PCout <= 1; MAR_enable <= 1; IncPC <= 1; ZHighIn <= 1;  ZLowIn <= 1;
 	//#15 PCout <= 0; MAR_enable <= 0; 
@@ -151,11 +150,12 @@ end
 
 T6: begin
 	ZLowout <= 0; MAR_enable <= 0;
-	MDR_read <= 1; MDR_enable <= 1; Gra <= 1; Rout <= 1;
+	MDR_read <= 0; Gra <= 1; Rout <= 1; MDR_enable <= 1;
 end
 T7: begin
-	MDR_read <= 0; MDR_enable <= 0;Gra <= 0; Rout <= 0;
-	RAM_write <= 1; MDRout <= 1; MDR_enable <= 1; MDR_read <= 1;
+	Gra <= 0; Rout <= 0; MDR_enable <= 0;
+	MDRout <= 1; 
+	#5 RAM_write <= 1; 
 end
 
 

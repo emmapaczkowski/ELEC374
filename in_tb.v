@@ -96,7 +96,7 @@ always @(Present_state)
 				PCout <= 0; ZLowout <= 0; MDRout <= 0; 
 				MAR_enable <= 0; ZHighIn <= 0; ZLowIn <= 0; CON_enable<=0; 
 				InPort_enable<=0; OutPort_enable<=0;
-				InPort_input<=32'd0;
+				InPort_input<=32'd9;
 				PC_enable <=0; MDR_enable <= 0; IR_enable <= 0; 
 				Y_enable <= 0;
 				IncPC <= 0; RAM_write<=0;
@@ -108,7 +108,7 @@ always @(Present_state)
 				R0_R15_enable<= 16'd0; R0_R15_out<=16'd0;
 			end	
 						
-			//(in r1) where r1 is initially 0x08 Instruction is a8800000
+			//(in r1) where r1 is initially 0x08 and input reg is loaded with 'd9. Instruction is a8800000
 
 T0: begin 
 	PCout <= 1; MAR_enable <= 1; IncPC <= 1; ZHighIn <= 1;  ZLowIn <= 1;

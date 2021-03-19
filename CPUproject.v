@@ -104,7 +104,7 @@ module CPUproject(
 	reg_32_bits ZHigh_reg(clk, clr, ZHighIn, C_data_out[63:32], ZHigh_data_out);	
 	reg_32_bits ZLow_reg(clk, clr, ZLowIn, C_data_out[31:0], ZLow_data_out);
 	
-	reg_32_bits #(32'hFFFFFFFF)input_port(clk,clr,enableInputPort,InPort_input, Input_Port_dataout);
+	reg_32_bits #(32'hFFFFFFFF)input_port(clk,clr,1'd1,InPort_input, Input_Port_dataout);
 	reg_32_bits output_port(clk,clr,enableOutputPort, bus_contents, OutPort_output);
 	
 	IncPC_32_bit PC_reg(clk, IncPC, PCin, bus_contents, PC_data_out);
@@ -163,7 +163,7 @@ module CPUproject(
 		.BusMuxIn_Z_low(ZLow_data_out),
 		.BusMuxIn_PC(PC_data_out),
 		.BusMuxIn_MDR(MDR_data_out),	
-		.BusMuxIn_InPort(InPort_data_out),
+		.BusMuxIn_InPort(Input_Port_dataout),
 		.C_sign_extended(C_sign_extended),
 		.BusMuxOut(bus_contents),
 		.select_signal(bus_encoder_signal)
