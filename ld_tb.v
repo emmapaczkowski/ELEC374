@@ -77,6 +77,9 @@ always @(posedge clk)
 			T1					:	#40 Present_state = T2;
 			T2					:	#20 Present_state = T3;
 			T3					:	#40 Present_state = T4;
+			T4					:	#40 Present_state = T5;
+			T5					:	#40 Present_state = T6;
+			T6					:	#40 Present_state = T7;
 		endcase
 end
 

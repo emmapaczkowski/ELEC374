@@ -98,8 +98,8 @@ module CPUproject(
 	reg_32_bits R15(clk, clr, enableR[15], bus_contents, R15_data_out);
 	
 	reg_32_bits Y(clk, clr, Yin, bus_contents, Y_data_out);
-	reg_32_bits HI_reg(clk, clr, HIin, bus_contents, HI_data_out);
-	reg_32_bits LO_reg(clk, clr, LOin, bus_contents, LO_data_out);
+	reg_32_bits #(32'h00000c35) HI_reg(clk, clr, HIin, bus_contents, HI_data_out);
+	reg_32_bits #(32'h00000c35) LO_reg(clk, clr, LOin, bus_contents, LO_data_out);
 	reg_32_bits ZHigh_reg(clk, clr, ZHighIn, C_data_out[63:32], ZHigh_data_out);	
 	reg_32_bits ZLow_reg(clk, clr, ZLowIn, C_data_out[31:0], ZLow_data_out);
 	
@@ -113,11 +113,9 @@ module CPUproject(
 	
 	conff_logic conff1(IR_data_out[20:19], bus_contents, enableCon, con_out);
 	
-	//initial read_sig = 0;
 	wire [31:0] MDR_mux_out;	
 	// Multiplexer used to select an input for the MDR
 	mux_2_to_1 MDMux(bus_contents, RAM_data_out, Read, MDR_mux_out);			
-	//mux_3_to_1 MDMux(bus_contents,RAM_data_out,MDatain,Read, MDR_mux_out);
 	// Instatiating the MDR register
 	reg_32_bits MDR_reg(clk, clr, MDRin, MDR_mux_out, MDR_data_out);
 	
