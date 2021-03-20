@@ -21,7 +21,7 @@ module CPUproject(
 	input enableInputPort, enableOutputPort, 
 	input InPortout,
 	input wire[31:0] InPort_input, 
-	output wire[31:0] OutPort_output,		//OUTPUT OR INPUT
+	output wire[31:0] OutPort_output,		
 	output [31:0] bus_contents,
 	output [4:0] operation
 );

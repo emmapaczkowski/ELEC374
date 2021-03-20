@@ -1,63 +1,63 @@
-`timescale 1ns/10ps
+		`timescale 1ns/10ps
 
-module ld_tb;
-	reg clk, clr;
-	reg IncPC, CON_enable; 
-	reg [31:0] Mdatain;
-	wire [31:0] bus_contents;
-	reg RAM_write, MDR_enable, MDRout, MAR_enable, IR_enable;
-	reg MDR_read;
-	reg R_enable, Rout;
-	reg [15:0] R0_R15_enable, R0_R15_out;
-	reg Gra, Grb, Grc;
-	reg HI_enable, LO_enable, ZHighIn, ZLowIn, Y_enable, PC_enable, InPort_enable, OutPort_enable;
-	reg InPortout, PCout, Yout, ZLowout, ZHighout, LOout, HIout, BAout, Cout;
-	wire [4:0] opcode;
-	wire[31:0] OutPort_output;
-	reg [31:0] InPort_input;
-	
-	parameter Default = 4'b0000, Reg_load1a = 4'b0001, Reg_load1b = 4'b0010, Reg_load2a = 4'b0011, Reg_load2b = 4'b0100, Reg_load3a = 4'b0101, Reg_load3b = 4'b0110, T0 = 4'b0111, T1 = 4'b1000, T2 = 4'b1001, T3 = 4'b1010, T4 = 4'b1011, T5 = 4'b1100, T6 = 4'b1101, T7 = 4'b1110;
-	reg [3:0] Present_state = Default;
+		module ld_tb;
+			reg clk, clr;
+			reg IncPC, CON_enable; 
+			reg [31:0] Mdatain;
+			wire [31:0] bus_contents;
+			reg RAM_write, MDR_enable, MDRout, MAR_enable, IR_enable;
+			reg MDR_read;
+			reg R_enable, Rout;
+			reg [15:0] R0_R15_enable, R0_R15_out;
+			reg Gra, Grb, Grc;
+			reg HI_enable, LO_enable, ZHighIn, ZLowIn, Y_enable, PC_enable, InPort_enable, OutPort_enable;
+			reg InPortout, PCout, Yout, ZLowout, ZHighout, LOout, HIout, BAout, Cout;
+			wire [4:0] opcode;
+			wire[31:0] OutPort_output;
+			reg [31:0] InPort_input;
+			
+			parameter Default = 4'b0000, T0 = 4'b0111, T1 = 4'b1000, T2 = 4'b1001, T3 = 4'b1010, T4 = 4'b1011, T5 = 4'b1100, T6 = 4'b1101, T7 = 4'b1110;
+			reg [3:0] Present_state = Default;
 
-CPUproject DUT(	
-	.PCout(PCout),          	
-	.ZHighout(ZHighout),
-	.ZLowout(ZLowout),  
-	.MDRout(MDRout), 
-	.MARin(MAR_enable), 
-	.MDRin(MDR_enable),   	
-	.PCin(PC_enable), 
-	.IRin(IR_enable),
-	.Yin(Y_enable), 
-	.IncPC(IncPC),
-	.Read(MDR_read),
-   .clk(clk),
-	.MDatain(Mdatain), 	
-	.clr(clr),                       
-	.HIin(HI_enable),                                
-	.LOin(LO_enable),
-	.HIout(HIout), 
-	.LOout(LOout),                		
-	.ZHighIn(ZHighIn),
-	.ZLowIn(ZLowIn),
-	.Cout(Cout),
-	.RAM_write_en(RAM_write),
-	.GRA(Gra),								
-	.GRB(Grb),                       
-	.GRC(Grc), 
-	.R_in(R_enable),
-	.R_out(Rout),	
-	.Baout(BAout),
-	.enableCon(CON_enable),
-	.R_enableIn(R0_R15_enable), 
-	.Rout_in(R0_R15_out),
-	.enableInputPort(InPort_enable),
-	.enableOutputPort(OutPort_enable),
-	.InPortout(InPortout), 
-	.InPort_input(InPort_input),
-	.OutPort_output(OutPort_output),
-	.bus_contents(bus_contents),
-	.operation(opcode),                  	
+		CPUproject DUT(	
+			.PCout(PCout),          	
+			.ZHighout(ZHighout),
+			.ZLowout(ZLowout),  
+			.MDRout(MDRout), 
+			.MARin(MAR_enable), 
+			.MDRin(MDR_enable),   	
+			.PCin(PC_enable), 
+			.IRin(IR_enable),
+			.Yin(Y_enable), 
+			.IncPC(IncPC),
+			.Read(MDR_read),
+			.clk(clk),
+			.MDatain(Mdatain), 	
+			.clr(clr),                       
+			.HIin(HI_enable),                                
+			.LOin(LO_enable),
+			.HIout(HIout), 
+			.LOout(LOout),                		
+			.ZHighIn(ZHighIn),
+			.ZLowIn(ZLowIn),
+			.Cout(Cout),
+			.RAM_write_en(RAM_write),
+			.GRA(Gra),								
+			.GRB(Grb),                       
+			.GRC(Grc), 
+			.R_in(R_enable),
+			.R_out(Rout),	
+			.Baout(BAout),
+			.enableCon(CON_enable),
+			.R_enableIn(R0_R15_enable), 
+			.Rout_in(R0_R15_out),
+			.enableInputPort(InPort_enable),
+			.enableOutputPort(OutPort_enable),
+			.InPortout(InPortout), 
+			.InPort_input(InPort_input),
+			.OutPort_output(OutPort_output),
+			.bus_contents(bus_contents),
+			.operation(opcode)	     									             	
 );
 
 initial
@@ -100,7 +100,7 @@ always @(Present_state)
 				R0_R15_enable<= 16'd0; R0_R15_out<=16'd0;
 			end	
 						
-			//first test:  (ld r1, 7) where r1 is initially 8. Address 7 has value 15. Instruction is 00800007
+			//first test:  (ld r1, 7) where r1 is initially 8. Address 7 has value 15. Instruction is = 00800007
 			//second test: ld r1, 2(r2), where r2 is 2 and address 4 has 15. Instruction is 00900002.
 
 T0: begin 

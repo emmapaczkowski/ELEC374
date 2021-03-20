@@ -16,7 +16,7 @@ module jr_tb;
 	wire[31:0] OutPort_output;
 	reg [31:0] InPort_input;
 	
-	parameter Default = 4'b0000, Reg_load1a = 4'b0001, Reg_load1b = 4'b0010, Reg_load2a = 4'b0011, Reg_load2b = 4'b0100, Reg_load3a = 4'b0101, Reg_load3b = 4'b0110, T0 = 4'b0111, T1 = 4'b1000, T2 = 4'b1001, T3 = 4'b1010, T4 = 4'b1011, T5 = 4'b1100, T6 = 4'b1101, T7 = 4'b1110;
+	parameter Default = 4'b0000, T0 = 4'b0111, T1 = 4'b1000, T2 = 4'b1001, T3 = 4'b1010, T4 = 4'b1011, T5 = 4'b1100, T6 = 4'b1101, T7 = 4'b1110;
 	reg [3:0] Present_state = Default;
 
 CPUproject DUT(	
@@ -73,21 +73,16 @@ always
 always @(posedge clk) 
 	begin
 		case (Present_state)
-			Default			:	#40 Present_state = Reg_load1a;
-			Reg_load1a		:	#40 Present_state = Reg_load1b;
-			Reg_load1b		:	#40 Present_state = Reg_load2a;
-			Reg_load2a		:	#40 Present_state = Reg_load2b;
-			Reg_load2b		:	#40 Present_state = Reg_load3a;
-			Reg_load3a		:	#40 Present_state = Reg_load3b;
-			Reg_load3b		:	#40 Present_state = T0;
+			Default			:	#40 Present_state = T0;
 			T0					:	#40 Present_state = T1;
 			T1					:	#40 Present_state = T2;
-			T2					:	#40 Present_state = T3;
+			T2					:	#20 Present_state = T3;
 		endcase
 end
 
 always @(Present_state) 
 	begin
+	#10
 		case (Present_state) //assert the required signals in each clockcycle
 			Default: begin // initialize the signals
 				PCout <= 0; ZLowout <= 0; MDRout <= 0; 
@@ -108,22 +103,23 @@ always @(Present_state)
 			//(jr R1) where r1 is initially 0x08. Instruction is 98800000
 
 T0: begin 
-	PCout <= 1; MAR_enable <= 1; IncPC <= 1; ZHighIn <= 1;  ZLowIn <= 1;
+	PCout <= 1; MAR_enable <= 1; 
 end
 
 T1: begin //Loads MDR from RAM output
-		PCout <= 0; MAR_enable <= 0; IncPC <= 0; ZHighIn <= 0;  ZLowIn <= 0;
-		MDR_enable <= 1; MDR_read<=1; ZLowout <= 1; PC_enable <= 1;
+		PCout <= 0; MAR_enable <= 0;  
+		MDR_enable <= 1; MDR_read<=1; ZLowout <= 1; 
 end
 
 T2: begin
-	MDR_enable <= 0; MDR_read<=0;ZLowout <= 0; PC_enable <= 0;
-	MDRout <= 1; IR_enable <= 1;			
+	MDR_enable <= 0; MDR_read<=0;ZLowout <= 0; 
+	MDRout <= 1; IR_enable <= 1; PC_enable <= 1; IncPC <= 1;			
 end
 
 T3: begin
-	MDRout <= 0; IR_enable <= 0;			
+	MDRout <= 0; IR_enable <= 0;	PC_enable <= 0; IncPC <= 0;				
 	Gra<=1;Rout<=1; PC_enable <= 1;
+	#40 PC_enable <= 0;
 end
 endcase
 end

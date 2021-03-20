@@ -1,8 +1,13 @@
+//brzr r2, 35:  91000023
+//brnz r2, 35:  91080023
+//brpl r2, 35:  91100023
+//brmi r2, 35:  91180023
+
 `timescale 1ns/10ps
 
-module in_tb;
+module branch;
 	reg clk, clr;
-	reg IncPC, CON_enable; 
+	reg IncPC, CON_enable; //Not actually implemented in Datapath yet
 	reg [31:0] Mdatain;
 	wire [31:0] bus_contents;
 	reg RAM_write, MDR_enable, MDRout, MAR_enable, IR_enable;
@@ -16,7 +21,7 @@ module in_tb;
 	wire[31:0] OutPort_output;
 	reg [31:0] InPort_input;
 	
-	parameter Default = 4'b0000, T0 = 4'b0111, T1 = 4'b1000, T2 = 4'b1001, T3 = 4'b1010, T4 = 4'b1011, T5 = 4'b1100, T6 = 4'b1101, T7 = 4'b1110;
+	parameter Default = 4'b0000, Reg_load1a = 4'b0001, Reg_load1b = 4'b0010, Reg_load2a = 4'b0011, Reg_load2b = 4'b0100, Reg_load3a = 4'b0101, Reg_load3b = 4'b0110, T0 = 4'b0111, T1 = 4'b1000, T2 = 4'b1001, T3 = 4'b1010, T4 = 4'b1011, T5 = 4'b1100, T6 = 4'b1101, T7 = 4'b1110;
 	reg [3:0] Present_state = Default;
 
 CPUproject DUT(	
@@ -61,7 +66,6 @@ CPUproject DUT(
                	
 );
 
-
 initial
 	begin
 		clk = 0;
@@ -78,18 +82,22 @@ always @(posedge clk)
 			T0					:	#40 Present_state = T1;
 			T1					:	#40 Present_state = T2;
 			T2					:	#20 Present_state = T3;
+			T3					:	#40 Present_state = T4;
+			T4					:	#40 Present_state = T5;
+			T5					:	#40 Present_state = T6;
+			T6					:	#40 Present_state = T7;
 		endcase
 end
 
 always @(Present_state) 
 	begin
-	#10
+	#10;
 		case (Present_state) //assert the required signals in each clockcycle
 			Default: begin // initialize the signals
 				PCout <= 0; ZLowout <= 0; MDRout <= 0; 
 				MAR_enable <= 0; ZHighIn <= 0; ZLowIn <= 0; CON_enable<=0; 
 				InPort_enable<=0; OutPort_enable<=0;
-				InPort_input<=32'd9;
+				InPort_input<=32'd0;
 				PC_enable <=0; MDR_enable <= 0; IR_enable <= 0; 
 				Y_enable <= 0;
 				IncPC <= 0; RAM_write<=0;
@@ -100,8 +108,6 @@ always @(Present_state)
 				Rout<=0;R_enable<=0;MDR_read<=0;
 				R0_R15_enable<= 16'd0; R0_R15_out<=16'd0;
 			end	
-						
-			//(in r1) where r1 is initially 0x08 and input reg is loaded with 'd9. Instruction is a8800000
 
 T0: begin 
 	PCout <= 1; MAR_enable <= 1; 
@@ -116,11 +122,35 @@ T2: begin
 	MDR_enable <= 0; MDR_read<=0;ZLowout <= 0; 
 	MDRout <= 1; IR_enable <= 1; PC_enable <= 1; IncPC <= 1;			
 end
-
-T3: begin
-	MDRout <= 0; IR_enable <= 0;			
-	Gra<=1;R_enable<=1; InPortout <= 1;
-end
+			
+			T3: begin
+				MDRout <= 0; IR_enable <= 0; PC_enable <= 0;IncPC <= 0;
+				Gra<=1;Rout<=1; CON_enable<=1;
+			end
+			
+			T4: begin
+				Gra<=0;Rout<=0; CON_enable<=0;
+				PCout<=1; Y_enable <= 1;
+				
+			end
+			
+			T5: begin
+					PCout<=0; Y_enable <= 0;
+			   	Cout <= 1; ZHighIn <= 1; ZLowIn <= 1;
+			end
+			
+			T6: begin
+					Cout <= 0; ZHighIn <= 0; ZLowIn <= 0;
+			   	ZLowout<=1; PC_enable<=1;	
+			end
+			
+			T7: begin
+				ZLowout<=0; PC_enable<=0;
+				PCout<=1;
+			end
+			
 endcase
+
 end
+
 endmodule
