@@ -1,45 +1,36 @@
 `timescale 1ns/10ps
 
 module CPUproject(
-	input PCout,
-	input ZHighout,
-	input ZLowout,
-	input MDRout,
-	input MARin,
-	input PCin,
-	input MDRin,
-	input IRin,
-	input Yin,
-	input IncPC,
-	input Read,		
-	input clk, 
-	input [31:0] MDatain,
+			
+	input clk, rst, stop,
+	//input [31:0] MDatain,
 	
-	input clr, 
-	input HIin, LOin, HIout, LOout, ZHighIn, ZLowIn, Cout, RAM_write_en, GRA, GRB, GRC, R_in, R_out, Baout, enableCon,
-	input [15:0] R_enableIn, Rout_in,
-	input enableInputPort, enableOutputPort, 
-	input InPortout,
 	input wire[31:0] InPort_input, 
 	output wire[31:0] OutPort_output,		
 	output [31:0] bus_contents,
 	output [4:0] operation
 );
 
+	wire PCout, ZHighout, ZLowout, MDRout, MARin, PCin, MDRin, IRin, Yin, IncPC, Read, 
+			HIin, LOin, HIout, LOout, ZHighIn, ZLowIn, Cout, RAM_write_en, GRA, GRB, GRC, 
+			R_in, R_out, Baout, enableCon, enableInputPort, enableOutputPort, InPortout, clr;
+	
+	wire [15:0] R_enableIn, Rout_in;
 	wire [31:0] BusMuxInR0_to_AND;
 	
 	wire [15:0] enableR_IR; 
 	wire [15:0] Rout_IR;
-	reg  [15:0]  enableR; 
-	reg  [15:0]  Rout;
+	reg  [15:0] enableR; 
+	reg  [15:0] Rout;
 	wire [3:0]  decoder_in;
 	
+	 //assign enableR = enableR_IR ? enableR_IR :  R_enableIn;
 	 
 		always@(*)begin		
 			if (enableR_IR)enableR<=enableR_IR; 
 			else enableR<=R_enableIn;
 			if (Rout_IR)Rout<=Rout_IR; 
-			else Rout<=Rout_in;
+			else Rout<=Rout_in;		//Rout or R_out??
 		end 
 	 
 	 //Inputs to the bus's 32-to_1 multiplexer
@@ -74,7 +65,7 @@ module CPUproject(
 	wire [63:0] C_data_out;
 	wire [31:0] Input_Port_dataout;
 	wire [4:0]  bus_encoder_signal;
-	wire Con_out;
+	wire con_out;
 	
 	encoder_32_to_5 busEncoder({{8{1'b0}},Cout,InPortout,MDRout,PCout,ZLowout,ZHighout,LOout,HIout,Rout}, bus_encoder_signal);
  
@@ -171,6 +162,48 @@ module CPUproject(
 	.branch_flag(con_out),
 	.IncPC(IncPC),
 	.C_reg(C_data_out)
+	);
+	
+	//instantiate the control unit
+	control_unit the_control_unit(
+		.PCout(PCout),
+		.ZHighout(ZHighout),
+		.ZLowout(ZLowout),
+		.MDRout(MDRout),
+		.MAR_enable(MARin),
+		.PC_enable(PCin),
+		.MDR_enable(MDRin),
+		.IR_enable(IRin),
+		.Y_enable(Yin),
+		.IncPC(IncPC),
+		.MDR_read(Read),
+		.Clear(clr),
+		.HIin(HIin),
+		.LOin(LOin),
+		.HIout(HIout),
+		.LOout(LOout),
+		.ZHighIn(ZHighIn),
+		.ZLowIn(ZLowIn),
+		.Cout(Cout),
+		.RAM_write(RAM_write_en),
+		.Gra(GRA),
+		.Grb(GRB),
+		.Grc(GRC),
+		.R_enable(R_in),
+		.Rout(R_out),
+		.BAout(Baout),
+		.CON_enable(enableCon),
+		.enableInputPort(enableInputPort),
+		.OutPort_enable(enableOutputPort),
+		.InPortout(InPortout),
+		//.R0_R15_enable(enableR),
+		.R_enableIn(R_enableIn),
+		//.Rout_in(Rout_in),
+		//.InPort_input(InPort_input),
+		.IR(IR),
+		.Clock(clk),
+		.Reset(rst),
+		.Stop(stop)
 	);
 	
 endmodule

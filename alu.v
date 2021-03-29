@@ -14,7 +14,7 @@ module alu(
 	parameter Addition = 5'b00011, Subtraction = 5'b00100, Multiplication = 5'b01110, Division = 5'b01111, Shift_right = 5'b00101, Shift_left = 5'b00110, Rotate_right = 5'b00111, Rotate_left = 5'b01000, 
 				 Logical_AND = 5'b01001, Logical_OR = 5'b01010, Negate = 5'b10000, _Not = 5'b10001, load = 5'b00000, loadi = 5'b00001, store = 5'b00010,
 				 addi = 5'b01011, andi = 5'b01100, ori = 5'b01101, branch = 5'b10010, jr = 5'b10011, jal = 5'b10100, mfhi = 5'b10111, mflo = 5'b11000,
-				 in = 5'b10101, out = 5'b10110;
+				 in = 5'b10101, out = 5'b10110, nop = 5'b11001, halt = 5'b11010;
 	
 	wire [31:0] IncPC_out, shr_out, shl_out, lor_out, land_out, neg_out, not_out, adder_sum, adder_cout, sub_sum, sub_cout, rol_out, ror_out;
 	wire [63:0] mul_out, div_out;
@@ -97,6 +97,14 @@ module alu(
 						C_reg[31:0] <= Y_reg[31:0];
 						C_reg[63:32] <= 32'd0;
 					end
+				end
+				
+				halt: begin
+					
+				end
+				
+				nop: begin
+					
 				end
 				
 				default: begin
