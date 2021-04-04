@@ -114,12 +114,10 @@ always @(posedge Clock, posedge Reset, posedge Stop)
 			ror5 				:	Present_state = fetch0;
 			
 			neg3				: 	Present_state = neg4;
-			neg4				: 	Present_state = neg5;
-			neg5 				:	Present_state = fetch0;
+			neg4				: 	Present_state = fetch0;
 			
 			not3				: 	Present_state = not4;
-			not4				: 	Present_state = not5;
-			not5 				:	Present_state = fetch0;
+			not4				: 	Present_state = fetch0;
 			
 			ld3				: 	Present_state = ld4;
 			ld4				: 	Present_state = ld5;
@@ -194,175 +192,60 @@ begin
 			MDRout <= 1; IR_enable <= 1; PC_enable <= 1; IncPC <= 1;	
 		end 
 		//***********************************************
-		add3: begin	
+		add3, sub3: begin	
+			MDRout <= 0; IR_enable <= 0;
 			Grb <= 1; Rout <= 1; Y_enable <= 1;
 		end
-		add4: begin
+		add4, sub4: begin
 				Grb <= 0; Rout <= 0; Y_enable <= 0;
 				Cout<=1;ZHighIn <= 1;  ZLowIn <= 1;	// does this need to be changed since not using immediate???? 
 		end
-		add5: begin
+		add5, sub5: begin
 				Cout<=0; ZHighIn <= 0;  ZLowIn <= 0;
 				ZLowout <= 1;Gra<=1;R_enable<=1;
 		end
 		//***********************************************
-		sub3: begin	
-			Grb <= 1; Rout <= 1; Y_enable <= 1;
+		or3, and3, shl3, shr3, rol3, ror3: begin	
+			MDRout <= 0; IR_enable <= 0;
+			Grb<=1;Rout<=1;Y_enable<=1;
 		end
-		sub4: begin
-				Grb <= 0; Rout <= 0; Y_enable <= 0;
-				Cout<=1;ZHighIn <= 1;  ZLowIn <= 1;	// does this need to be changed since not using immediate???? 
+		or4, and4, shl4, shr4, rol4, ror4: begin
+			Grb<=0;Rout<=0;Y_enable<=0;
+			Cout<=1;ZHighIn <= 1;  ZLowIn <= 1;
 		end
-		sub5: begin
-				Cout<=0; ZHighIn <= 0;  ZLowIn <= 0;
-				ZLowout <= 1;Gra<=1;R_enable<=1;
-		end
-		//***********************************************
-		mul3: begin	
-			
-		end
-		mul4: begin
-				
-		end
-		mul5: begin
-				
-		end
-		mul6: begin
-				
+		or5, and5, shl5, shr5, rol5, ror5: begin
+			Cout<=0; ZHighIn <= 0;  ZLowIn <= 0;
+			ZLowout <= 1;Gra<=1;R_enable<=1;
+			#40 ZLowout <= 0;Gra<=1;Rout<=1;R_enable<=0;
 		end
 		//***********************************************
-		div3: begin	
+		mul3, div3: begin	
+			MDRout <= 0; IR_enable <= 0;
+			Grb <= 1; Rout <= 1;Y_enable <= 1;  
 			
 		end
-		div4: begin
+		mul4, div4: begin
+			Grb <= 0; Rout <= 0; Y_enable <= 0;
+			Cout<=1;ZHighIn <= 1;  ZLowIn <= 1;
 				
 		end
-		div5: begin
+		mul5, div5: begin
+			Cout<=0; ZHighIn <= 0;  ZLowIn <= 0;
+			ZLowout<=1; LOin <= 1;
 				
 		end
-		div6: begin
-				
+		mul6, div6: begin
+			ZLowout<= 0; LOin <= 0;
+			ZHighout<= 1; HIin <= 1; 
 		end
 		//***********************************************
-		or3: begin	
-			
+		not3, neg3: begin	
+			MDRout <= 0; IR_enable <= 0;
+			Cout<=1;ZHighIn <= 1;  ZLowIn <= 1;		// might be wrong, not sure whether to combine t3 and t4 from old tb
 		end
-		or4: begin
-				
-		end
-		or5: begin
-				
-		end
-		//***********************************************
-		and3: begin	
-			
-		end
-		and4: begin
-				
-		end
-		and5: begin
-				
-		end
-		//***********************************************
-		shl3: begin	
-			
-		end
-		shl4: begin
-				
-		end
-		shl5: begin
-				
-		end
-		//***********************************************
-		shr3: begin	
-			
-		end
-		shr4: begin
-				
-		end
-		shr5: begin
-				
-		end
-		//***********************************************
-		rol3: begin	
-			
-		end
-		rol4: begin
-				
-		end
-		rol5: begin
-				
-		end
-		//***********************************************
-		ror3: begin	
-			
-		end
-		ror4: begin
-				
-		end
-		ror5: begin
-				
-		end
-		//***********************************************
-		neg3: begin	
-			
-		end
-		neg4: begin
-				
-		end
-		neg5: begin
-				
-		end
-		//***********************************************
-		not3: begin	
-			
-		end
-		not4: begin
-				
-		end
-		not5: begin
-				
-		end
-		//***********************************************
-		ld3: begin	
-			
-		end
-		ld4: begin
-				
-		end
-		ld5: begin
-				
-		end
-		ld6: begin
-				
-		end
-		ld7: begin
-				
-		end
-		//***********************************************
-		ldi3: begin	
-			
-		end
-		ldi4: begin
-				
-		end
-		ldi5: begin
-		end
-		//***********************************************
-		st3: begin	
-			
-		end
-		st4: begin
-				
-		end
-		st5: begin
-				
-		end
-		st6: begin
-				
-		end
-		st7: begin
-				
+		not4, neg4: begin
+			Cout<=0; ZHighIn <= 0;  ZLowIn <= 0;
+			ZLowout <= 1;Gra<=1;R_enable<=1;
 		end
 		//***********************************************
 		addi3: begin
@@ -522,7 +405,6 @@ begin
 		halt3: begin
 			Run <= 0;
 		end
-		
 		default: begin 
 		end
 	endcase
