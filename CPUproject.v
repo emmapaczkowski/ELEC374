@@ -13,7 +13,7 @@ module CPUproject(
 
 	wire PCout, ZHighout, ZLowout, MDRout, MARin, PCin, MDRin, IRin, Yin, IncPC, Read, 
 			HIin, LOin, HIout, LOout, ZHighIn, ZLowIn, Cout, RAM_write_en, GRA, GRB, GRC, 
-			R_in, R_out, Baout, enableCon, enableInputPort, enableOutputPort, InPortout, clr;
+			R_in, R_out, Baout, enableCon, enableInputPort, enableOutputPort, InPortout;
 	
 	wire [15:0] R_enableIn, Rout_in;
 	wire [31:0] BusMuxInR0_to_AND;
@@ -71,35 +71,35 @@ module CPUproject(
  
    // Creating all 32-bit registers
 	assign R0_data_out = {32{!Baout}} & BusMuxInR0_to_AND;
-	reg_32_bits R0(clk, clr, enableR[0], bus_contents, BusMuxInR0_to_AND); 
-	reg_32_bits #(32'h00000008) R1(clk, clr, enableR[1], bus_contents, R1_data_out);
-	reg_32_bits #(32'h00000002) R2(clk, clr, enableR[2], bus_contents, R2_data_out);
-	reg_32_bits R3(clk, clr, enableR[3], bus_contents, R3_data_out);
-	reg_32_bits R4(clk, clr, enableR[4], bus_contents, R4_data_out);
-	reg_32_bits R5(clk, clr, enableR[5], bus_contents, R5_data_out);
-	reg_32_bits R6(clk, clr, enableR[6], bus_contents, R6_data_out);
-	reg_32_bits R7(clk, clr, enableR[7], bus_contents, R7_data_out);
-	reg_32_bits R8(clk, clr, enableR[8], bus_contents, R8_data_out);
-	reg_32_bits R9(clk, clr, enableR[9], bus_contents, R9_data_out);
-	reg_32_bits R10(clk, clr, enableR[10], bus_contents, R10_data_out);
-	reg_32_bits R11(clk, clr, enableR[11], bus_contents, R11_data_out);
-	reg_32_bits R12(clk, clr, enableR[12], bus_contents, R12_data_out);
-	reg_32_bits R13(clk, clr, enableR[13], bus_contents, R13_data_out);
-	reg_32_bits R14(clk, clr, enableR[14], bus_contents, R14_data_out);
-	reg_32_bits R15(clk, clr, enableR[15], bus_contents, R15_data_out);
+	reg_32_bits R0(clk, rst, enableR[0], bus_contents, BusMuxInR0_to_AND); 
+	reg_32_bits R1(clk, rst, enableR[1], bus_contents, R1_data_out);
+	reg_32_bits R2(clk, rst, enableR[2], bus_contents, R2_data_out);
+	reg_32_bits R3(clk, rst, enableR[3], bus_contents, R3_data_out);
+	reg_32_bits R4(clk, rst, enableR[4], bus_contents, R4_data_out);
+	reg_32_bits R5(clk, rst, enableR[5], bus_contents, R5_data_out);
+	reg_32_bits R6(clk, rst, enableR[6], bus_contents, R6_data_out);
+	reg_32_bits R7(clk, rst, enableR[7], bus_contents, R7_data_out);
+	reg_32_bits R8(clk, rst, enableR[8], bus_contents, R8_data_out);
+	reg_32_bits R9(clk, rst, enableR[9], bus_contents, R9_data_out);
+	reg_32_bits R10(clk, rst, enableR[10], bus_contents, R10_data_out);
+	reg_32_bits R11(clk, rst, enableR[11], bus_contents, R11_data_out);
+	reg_32_bits R12(clk, rst, enableR[12], bus_contents, R12_data_out);
+	reg_32_bits R13(clk, rst, enableR[13], bus_contents, R13_data_out);
+	reg_32_bits R14(clk, rst, enableR[14], bus_contents, R14_data_out);
+	reg_32_bits R15(clk, rst, enableR[15], bus_contents, R15_data_out);
 	
-	reg_32_bits Y(clk, clr, Yin, bus_contents, Y_data_out);
-	reg_32_bits #(32'h00000c35) HI_reg(clk, clr, HIin, bus_contents, HI_data_out);
-	reg_32_bits #(32'h00000c35) LO_reg(clk, clr, LOin, bus_contents, LO_data_out);
-	reg_32_bits ZHigh_reg(clk, clr, ZHighIn, C_data_out[63:32], ZHigh_data_out);	
-	reg_32_bits ZLow_reg(clk, clr, ZLowIn, C_data_out[31:0], ZLow_data_out);
+	reg_32_bits Y(clk, rst, Yin, bus_contents, Y_data_out);
+	reg_32_bits HI_reg(clk, rst, HIin, bus_contents, HI_data_out);
+	reg_32_bits LO_reg(clk, rst, LOin, bus_contents, LO_data_out);
+	reg_32_bits ZHigh_reg(clk, rst, ZHighIn, C_data_out[63:32], ZHigh_data_out);	
+	reg_32_bits ZLow_reg(clk, rst, ZLowIn, C_data_out[31:0], ZLow_data_out);
 	
-	reg_32_bits #(32'hFFFFFFFF)input_port(clk,clr,1'd1,InPort_input, Input_Port_dataout);
-	reg_32_bits output_port(clk,clr,enableOutputPort, bus_contents, OutPort_output);
+	reg_32_bits input_port(clk,rst,1'd1,InPort_input, Input_Port_dataout);
+	reg_32_bits output_port(clk,rst,enableOutputPort, bus_contents, OutPort_output);
 	
 	IncPC_32_bit PC_reg(clk, IncPC, PCin, bus_contents, PC_data_out);
 	
-	reg_32_bits IR(clk, clr, IRin, bus_contents, IR_data_out);
+	reg_32_bits IR(clk, rst, IRin, bus_contents, IR_data_out);
 	select_encode_logic IRlogic(IR_data_out, GRA, GRB, GRC, R_in, R_out, Baout, operation, C_sign_extended, enableR_IR, Rout_IR, decoder_in);
 	
 	conff_logic conff1(IR_data_out[20:19], bus_contents, enableCon, con_out);
@@ -108,10 +108,10 @@ module CPUproject(
 	// Multiplexer used to select an input for the MDR
 	mux_2_to_1 MDMux(bus_contents, RAM_data_out, Read, MDR_mux_out);			
 	// Instatiating the MDR register
-	reg_32_bits MDR_reg(clk, clr, MDRin, MDR_mux_out, MDR_data_out);
+	reg_32_bits MDR_reg(clk, rst, MDRin, MDR_mux_out, MDR_data_out);
 	
 	// Instatiating the MAR register
-	reg_32_bits MAR(clk, clr, MARin, bus_contents, MAR_data_out);
+	reg_32_bits MAR(clk, rst, MARin, bus_contents, MAR_data_out);
 	
 	memoryRam	memoryRam_inst (
 	.address ( MAR_data_out ),
@@ -154,7 +154,7 @@ module CPUproject(
 	//instantiate alu
 	alu the_alu(
 	.clk(clk),
-	.clear(clr), 
+	.clear(rst), 
 	.A_reg(bus_contents),
 	.B_reg(bus_contents),
 	.Y_reg(Y_data_out),
@@ -177,7 +177,7 @@ module CPUproject(
 		.Y_enable(Yin),
 		.IncPC(IncPC),
 		.MDR_read(Read),
-		.Clear(clr),
+		//.Clear(rst),
 		.HIin(HIin),
 		.LOin(LOin),
 		.HIout(HIout),
@@ -200,7 +200,7 @@ module CPUproject(
 		.R_enableIn(R_enableIn),
 		//.Rout_in(Rout_in),
 		//.InPort_input(InPort_input),
-		.IR(IR),
+		.IR(IR_data_out),
 		.Clock(clk),
 		.Reset(rst),
 		.Stop(stop)

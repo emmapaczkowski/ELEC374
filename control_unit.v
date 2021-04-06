@@ -1,7 +1,6 @@
 `timescale 1ns/10ps
 module control_unit (
 	output reg	PCout, ZHighout, ZLowout, MDRout, MAR_enable, PC_enable, MDR_enable, IR_enable, Y_enable, IncPC, MDR_read, 
-					Clear,
 					HIin, LOin, HIout, LOout, ZHighIn, ZLowIn, Cout, RAM_write, Gra, Grb, Grc, R_enable, Rout, BAout, CON_enable,
 					enableInputPort, OutPort_enable, InPortout, Run,
 	// input reg	[15:0] R0_R15_enable,
@@ -173,7 +172,8 @@ begin
 	case(Present_state)
 		Reset_state: begin 
 			Run <= 1;
-			Clear <= 1;
+			//Reset <=1 ;
+			//Clear <= 1;
 			Gra <= 0; Grb <= 0; Grc <= 0; Y_enable <= 0;	
 			PCout<= 0; ZHighout<=0; ZLowout<=0; MDRout<=0; MAR_enable<=0; PC_enable<=0; MDR_enable<=0; IR_enable<=0; Y_enable<=0; IncPC<=0; MDR_read<=0;
 			HIin<=0; LOin<=0; HIout<=0; LOout<=0; ZHighIn<=0; ZLowIn<=0; Cout<=0; RAM_write<=0; 
@@ -198,10 +198,10 @@ begin
 		end
 		add4, sub4: begin
 				Grb <= 0; Rout <= 0; Y_enable <= 0;
-				Cout<=1;ZHighIn <= 1;  ZLowIn <= 1;	// does this need to be changed since not using immediate???? 
+				Grc<=1; Rout <= 1; ZHighIn <= 1;  ZLowIn <= 1; 
 		end
 		add5, sub5: begin
-				Cout<=0; ZHighIn <= 0;  ZLowIn <= 0;
+				Grc<=0; Rout <= 0; ZHighIn <= 0;  ZLowIn <= 0;
 				ZLowout <= 1;Gra<=1;R_enable<=1;
 		end
 		//***********************************************
@@ -211,10 +211,10 @@ begin
 		end
 		or4, and4, shl4, shr4, rol4, ror4: begin
 			Grb<=0;Rout<=0;Y_enable<=0;
-			Cout<=1;ZHighIn <= 1;  ZLowIn <= 1;
+			Grc<=1; Rout <= 1;ZHighIn <= 1;  ZLowIn <= 1;
 		end
 		or5, and5, shl5, shr5, rol5, ror5: begin
-			Cout<=0; ZHighIn <= 0;  ZLowIn <= 0;
+			Grc<=0; Rout <= 0; ZHighIn <= 0;  ZLowIn <= 0;
 			ZLowout <= 1;Gra<=1;R_enable<=1;
 			#40 ZLowout <= 0;Gra<=1;Rout<=1;R_enable<=0;
 		end
@@ -226,11 +226,11 @@ begin
 		end
 		mul4, div4: begin
 			Grb <= 0; Rout <= 0; Y_enable <= 0;
-			Cout<=1;ZHighIn <= 1;  ZLowIn <= 1;
+			Grc<=1; Rout <= 1;ZHighIn <= 1;  ZLowIn <= 1;
 				
 		end
 		mul5, div5: begin
-			Cout<=0; ZHighIn <= 0;  ZLowIn <= 0;
+			Grb<=0;Rout<=0;ZHighIn <= 0;  ZLowIn <= 0;
 			ZLowout<=1; LOin <= 1;
 				
 		end
@@ -241,11 +241,28 @@ begin
 		//***********************************************
 		not3, neg3: begin	
 			MDRout <= 0; IR_enable <= 0;
-			Cout<=1;ZHighIn <= 1;  ZLowIn <= 1;		// might be wrong, not sure whether to combine t3 and t4 from old tb
+			Grb<=1; Rout <= 1;ZHighIn <= 1;  ZLowIn <= 1;
 		end
 		not4, neg4: begin
+			Grb<=0; Rout <= 0; ZHighIn <= 0;  ZLowIn <= 0;
+			ZLowout <= 1;Gra<=1;R_enable<=1;
+		end
+
+		//***********************************************
+		andi3: begin
+			MDRout <= 0; IR_enable <= 0;			
+			Grb<=1;Rout<=1;Y_enable<=1;
+		end
+
+		andi4: begin
+			Grb<=0;Rout<=0;Y_enable<=0;
+			Cout<=1;ZHighIn <= 1;  ZLowIn <= 1;
+		end
+
+		andi5: begin
 			Cout<=0; ZHighIn <= 0;  ZLowIn <= 0;
 			ZLowout <= 1;Gra<=1;R_enable<=1;
+			#40 ZLowout <= 0;Gra<=1;Rout<=1;R_enable<=0;
 		end
 		//***********************************************
 		addi3: begin
@@ -259,22 +276,6 @@ begin
 		end
 
 		addi5: begin
-			Cout<=0; ZHighIn <= 0;  ZLowIn <= 0;
-			ZLowout <= 1;Gra<=1;R_enable<=1;
-			#40 ZLowout <= 0;Gra<=1;Rout<=1;R_enable<=0;
-		end
-		//***********************************************
-		andi3: begin
-			MDRout <= 0; IR_enable <= 0;			
-			Grb<=1;Rout<=1;Y_enable<=1;
-		end
-
-		andi4: begin
-			Grb<=0;Rout<=0;Y_enable<=0;
-			Cout<=1;ZHighIn <= 1;  ZLowIn <= 1;
-		end
-
-		andi5: begin
 			Cout<=0; ZHighIn <= 0;  ZLowIn <= 0;
 			ZLowout <= 1;Gra<=1;R_enable<=1;
 			#40 ZLowout <= 0;Gra<=1;Rout<=1;R_enable<=0;
