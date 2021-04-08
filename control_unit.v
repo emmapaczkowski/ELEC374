@@ -193,7 +193,7 @@ begin
 		end 
 		//***********************************************
 		add3, sub3: begin	
-			MDRout <= 0; IR_enable <= 0;
+			MDRout <= 0; IR_enable <= 0; PC_enable <= 0; IncPC <= 0;
 			Grb <= 1; Rout <= 1; Y_enable <= 1;
 		end
 		add4, sub4: begin
@@ -206,7 +206,7 @@ begin
 		end
 		//***********************************************
 		or3, and3, shl3, shr3, rol3, ror3: begin	
-			MDRout <= 0; IR_enable <= 0;
+			MDRout <= 0; IR_enable <= 0;PC_enable <= 0; IncPC <= 0;
 			Grb<=1;Rout<=1;Y_enable<=1;
 		end
 		or4, and4, shl4, shr4, rol4, ror4: begin
@@ -220,7 +220,7 @@ begin
 		end
 		//***********************************************
 		mul3, div3: begin	
-			MDRout <= 0; IR_enable <= 0;
+			MDRout <= 0; IR_enable <= 0;PC_enable <= 0; IncPC <= 0;
 			Grb <= 1; Rout <= 1;Y_enable <= 1;  
 			
 		end
@@ -240,7 +240,7 @@ begin
 		end
 		//***********************************************
 		not3, neg3: begin	
-			MDRout <= 0; IR_enable <= 0;
+			MDRout <= 0; IR_enable <= 0;PC_enable <= 0; IncPC <= 0;
 			Grb<=1; Rout <= 1;ZHighIn <= 1;  ZLowIn <= 1;
 		end
 		not4, neg4: begin
@@ -250,7 +250,7 @@ begin
 
 		//***********************************************
 		andi3: begin
-			MDRout <= 0; IR_enable <= 0;			
+			MDRout <= 0; IR_enable <= 0;		PC_enable <= 0; IncPC <= 0;	
 			Grb<=1;Rout<=1;Y_enable<=1;
 		end
 
@@ -266,7 +266,7 @@ begin
 		end
 		//***********************************************
 		addi3: begin
-			MDRout <= 0; IR_enable <= 0;			
+			MDRout <= 0; IR_enable <= 0;		PC_enable <= 0; IncPC <= 0;	
 			Grb<=1;Rout<=1;Y_enable<=1;
 		end
 
@@ -282,7 +282,7 @@ begin
 		end
 		//***********************************************
 		ori3: begin
-			MDRout <= 0; IR_enable <= 0;			
+			MDRout <= 0; IR_enable <= 0;	PC_enable <= 0; IncPC <= 0;		
 			Grb<=1;Rout<=1;Y_enable<=1;
 		end
 
@@ -298,7 +298,7 @@ begin
 		end
 		//***********************************************
 		ld3: begin
-			MDRout <= 0; IR_enable <= 0;			
+			MDRout <= 0; IR_enable <= 0;		PC_enable <= 0; IncPC <= 0;	
 			Grb<=1;BAout<=1;Y_enable<=1;
 		end
 
@@ -322,7 +322,7 @@ begin
 		end
 		//***********************************************
 		ldi3: begin
-			MDRout <= 0; IR_enable <= 0;			
+			MDRout <= 0; IR_enable <= 0;PC_enable <= 0; IncPC <= 0;			
 			Grb<=1;BAout<=1;Y_enable<=1;
 		end
 
@@ -338,7 +338,7 @@ begin
 		end
 		//***********************************************
 		st3: begin
-			MDRout <= 0; IR_enable <= 0;			
+			MDRout <= 0; IR_enable <= 0;	PC_enable <= 0; IncPC <= 0;		
 			Grb<=1;BAout<=1;Y_enable<=1;
 		end
 
@@ -379,24 +379,24 @@ begin
 		end
 		//***********************************************
 		mfhi3: begin
-			MDRout <= 0; IR_enable <= 0;			
+			MDRout <= 0; IR_enable <= 0;		PC_enable <= 0; IncPC <= 0;	
 			Gra<=1;R_enable<=1; HIout<=1;
 			#40 Gra<=0;R_enable<=0; HIout<=0;
 		end
 		//***********************************************
 		mflo3: begin
-			MDRout <= 0; IR_enable <= 0;			
+			MDRout <= 0; IR_enable <= 0;		PC_enable <= 0; IncPC <= 0;	
 			Gra<=1;R_enable<=1; LOout<=1;
 			#40 Gra<=0;R_enable<=0; LOout<=0;
 		end
 		//***********************************************
 		in3: begin
-			MDRout <= 0; IR_enable <= 0;			
+			MDRout <= 0; IR_enable <= 0;			PC_enable <= 0; IncPC <= 0;
 			Gra<=1;R_enable<=1; InPortout <= 1;
 		end
 		//***********************************************
 		out3: begin
-			MDRout <= 0; IR_enable <= 0;			
+			MDRout <= 0; IR_enable <= 0;		PC_enable <= 0; IncPC <= 0;	
 			Gra<=1;Rout<=1;Y_enable<=1; OutPort_enable <= 1;
 		end
 		//***********************************************

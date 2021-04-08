@@ -22,6 +22,8 @@ module alu(
 	
 	always @(*)
 		begin
+			//if(Run == 1)
+			//begin
 			case (opcode)
 				
 				Addition: begin

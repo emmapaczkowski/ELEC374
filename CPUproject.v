@@ -4,7 +4,6 @@ module CPUproject(
 			
 	input clk, rst, stop,
 	//input [31:0] MDatain,
-	
 	input wire[31:0] InPort_input, 
 	output wire[31:0] OutPort_output,		
 	output [31:0] bus_contents,
@@ -13,9 +12,9 @@ module CPUproject(
 
 	wire PCout, ZHighout, ZLowout, MDRout, MARin, PCin, MDRin, IRin, Yin, IncPC, Read, 
 			HIin, LOin, HIout, LOout, ZHighIn, ZLowIn, Cout, RAM_write_en, GRA, GRB, GRC, 
-			R_in, R_out, Baout, enableCon, enableInputPort, enableOutputPort, InPortout;
-	
-	wire [15:0] R_enableIn, Rout_in;
+			R_in, R_out, Baout, enableCon, enableInputPort, enableOutputPort, InPortout, Run;
+		
+	wire [15:0] R_enableIn; //Rout_in;
 	wire [31:0] BusMuxInR0_to_AND;
 	
 	wire [15:0] enableR_IR; 
@@ -30,7 +29,7 @@ module CPUproject(
 			if (enableR_IR)enableR<=enableR_IR; 
 			else enableR<=R_enableIn;
 			if (Rout_IR)Rout<=Rout_IR; 
-			else Rout<=Rout_in;		//Rout or R_out??
+			else Rout<=16'b0;		//Rout or R_out??
 		end 
 	 
 	 //Inputs to the bus's 32-to_1 multiplexer
@@ -59,7 +58,7 @@ module CPUproject(
 	wire [31:0] InPort_data_out;
 	wire [31:0] Y_data_out;
 	wire [31:0] RAM_data_out;
-	wire [31:0] MAR_data_out;
+	wire [8:0] MAR_data_out;
 	wire [31:0] IR_data_out;
 	wire [31:0] C_sign_extended;
 	wire [63:0] C_data_out;
@@ -111,7 +110,7 @@ module CPUproject(
 	reg_32_bits MDR_reg(clk, rst, MDRin, MDR_mux_out, MDR_data_out);
 	
 	// Instatiating the MAR register
-	reg_32_bits MAR(clk, rst, MARin, bus_contents, MAR_data_out);
+	mar_unit MAR(clk, rst, MARin, bus_contents, MAR_data_out);
 	
 	memoryRam	memoryRam_inst (
 	.address ( MAR_data_out ),
@@ -196,6 +195,7 @@ module CPUproject(
 		.enableInputPort(enableInputPort),
 		.OutPort_enable(enableOutputPort),
 		.InPortout(InPortout),
+		.Run(Run),
 		//.R0_R15_enable(enableR),
 		.R_enableIn(R_enableIn),
 		//.Rout_in(Rout_in),
