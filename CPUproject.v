@@ -3,7 +3,6 @@
 module CPUproject(
 			
 	input clk, rst, stop,
-	//input [31:0] MDatain,
 	input wire[31:0] InPort_input, 
 	output wire[31:0] OutPort_output,		
 	output [31:0] bus_contents,
@@ -14,7 +13,7 @@ module CPUproject(
 			HIin, LOin, HIout, LOout, ZHighIn, ZLowIn, Cout, RAM_write_en, GRA, GRB, GRC, 
 			R_in, R_out, Baout, enableCon, enableInputPort, enableOutputPort, InPortout, Run;
 		
-	wire [15:0] R_enableIn; //Rout_in;
+	wire [15:0] R_enableIn; 
 	wire [31:0] BusMuxInR0_to_AND;
 	
 	wire [15:0] enableR_IR; 
@@ -22,14 +21,12 @@ module CPUproject(
 	reg  [15:0] enableR; 
 	reg  [15:0] Rout;
 	wire [3:0]  decoder_in;
-	
-	 //assign enableR = enableR_IR ? enableR_IR :  R_enableIn;
 	 
 		always@(*)begin		
 			if (enableR_IR)enableR<=enableR_IR; 
 			else enableR<=R_enableIn;
 			if (Rout_IR)Rout<=Rout_IR; 
-			else Rout<=16'b0;		//Rout or R_out??
+			else Rout<=16'b0;	
 		end 
 	 
 	 //Inputs to the bus's 32-to_1 multiplexer
@@ -176,7 +173,6 @@ module CPUproject(
 		.Y_enable(Yin),
 		.IncPC(IncPC),
 		.MDR_read(Read),
-		//.Clear(rst),
 		.HIin(HIin),
 		.LOin(LOin),
 		.HIout(HIout),
@@ -196,14 +192,10 @@ module CPUproject(
 		.OutPort_enable(enableOutputPort),
 		.InPortout(InPortout),
 		.Run(Run),
-		//.R0_R15_enable(enableR),
 		.R_enableIn(R_enableIn),
-		//.Rout_in(Rout_in),
-		//.InPort_input(InPort_input),
 		.IR(IR_data_out),
 		.Clock(clk),
 		.Reset(rst),
 		.Stop(stop)
 	);
-	
 endmodule

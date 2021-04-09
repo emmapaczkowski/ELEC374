@@ -3,15 +3,8 @@ module control_unit (
 	output reg	PCout, ZHighout, ZLowout, MDRout, MAR_enable, PC_enable, MDR_enable, IR_enable, Y_enable, IncPC, MDR_read, 
 					HIin, LOin, HIout, LOout, ZHighIn, ZLowIn, Cout, RAM_write, Gra, Grb, Grc, R_enable, Rout, BAout, CON_enable,
 					enableInputPort, OutPort_enable, InPortout, Run,
-	// input reg	[15:0] R0_R15_enable,
-	output reg	[15:0] R_enableIn, //Rout_in,
-	//output reg	[31:0] InPort_input, 
-					//Gra, Grb, Grc, Rin, ..., Rout,
-					//Yin, Zin, PCout, IncPC, ... MARin,
-					//Read, Write, ..., Clear,
-					//ADD, AND, OR, SUB, MUL, DIV, SHL, SHR, ROL, ROR, NOT, NEG, LD, LDI, ST, ADDI, ANDI, ORI, BR, JR, JAL, MFHI, MFLO, IN, OUT,
+	output reg	[15:0] R_enableIn, 
 	input		[31:0] IR,
-	//MDATAIN,
 	input		Clock, Reset, Stop);
 	
 parameter Reset_state= 8'b00000000, fetch0 = 8'b00000001, fetch1 = 8'b00000010, fetch2= 8'b00000011,
@@ -40,6 +33,7 @@ always @(posedge Clock, posedge Reset, posedge Stop)
 			fetch0			:	Present_state = fetch1;
 			fetch1			:	Present_state = fetch2;
 			fetch2			:	begin	
+										@(posedge Clock);
 										case	(IR[31:27])
 											5'b00011		:		Present_state=add3;	
 											5'b00100		: 		Present_state=sub3;
@@ -162,8 +156,6 @@ always @(posedge Clock, posedge Reset, posedge Stop)
 			
 			nop3 				:	Present_state = fetch0;
 			
-			//halt3				:	Present_state = fetch0;
-			
 			endcase
 	end
 
@@ -172,13 +164,13 @@ begin
 	case(Present_state)
 		Reset_state: begin 
 			Run <= 1;
+			R_enableIn <= 0;
 			//Reset <=1 ;
 			//Clear <= 1;
 			Gra <= 0; Grb <= 0; Grc <= 0; Y_enable <= 0;	
 			PCout<= 0; ZHighout<=0; ZLowout<=0; MDRout<=0; MAR_enable<=0; PC_enable<=0; MDR_enable<=0; IR_enable<=0; Y_enable<=0; IncPC<=0; MDR_read<=0;
 			HIin<=0; LOin<=0; HIout<=0; LOout<=0; ZHighIn<=0; ZLowIn<=0; Cout<=0; RAM_write<=0; 
 			R_enable<=0; Rout<=0; BAout<=0; CON_enable<=0; enableInputPort<=0; OutPort_enable<=0; InPortout<=0;
-			//FINISH REST OF THEM!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 		end
 		fetch0: begin
 			PCout <= 1; MAR_enable <= 1; 
@@ -190,6 +182,7 @@ begin
 		fetch2: begin
 			MDR_enable <= 0; MDR_read<=0;ZLowout <= 0; 
 			MDRout <= 1; IR_enable <= 1; PC_enable <= 1; IncPC <= 1;	
+			#21 PC_enable <= 0;
 		end 
 		//***********************************************
 		add3, sub3: begin	
@@ -334,7 +327,7 @@ begin
 		ldi5: begin
 			Cout<=0; ZHighIn <= 0;  ZLowIn <= 0;
 			ZLowout <= 1;Gra<=1;R_enable<=1;
-			#40 ZLowout <= 0;Gra<=1;Rout<=1;R_enable<=0;
+			#40 ZLowout <= 0;Gra<=0;R_enable<=0; 
 		end
 		//***********************************************
 		st3: begin
