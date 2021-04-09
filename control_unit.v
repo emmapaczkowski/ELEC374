@@ -68,6 +68,10 @@ always @(posedge Clock, posedge Reset, posedge Stop)
 			add4				:	Present_state = add5;
 			add5 				:	Present_state = fetch0;
 			
+			addi3				: 	Present_state = addi4;
+			addi4				:	Present_state = addi5;
+			addi5 				:	Present_state = fetch0;
+			
 			sub3				: 	Present_state = sub4;
 			sub4				: 	Present_state = sub5;
 			sub5				:	Present_state = fetch0;
