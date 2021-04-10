@@ -18,7 +18,7 @@ parameter Reset_state= 8'b00000000, fetch0 = 8'b00000001, fetch1 = 8'b00000010, 
 			 ld7 = 8'b00101110, ldi3 = 8'b00101111, ldi4 = 8'b00110000, ldi5 = 8'b00110001, st3 = 8'b00110010, st4 = 8'b00110011,
 			 st5 = 8'b00110100, st6 = 8'b00110101, st7 = 8'b00110110, addi3 = 8'b00110111, addi4 = 8'b00111000, addi5 = 8'b00111001,
 			 andi3 = 8'b00111010, andi4 = 8'b00111011, andi5 = 8'b00111100, ori3 = 8'b00111101, ori4 = 8'b00111110, ori5 = 8'b00111111,
-			 br3 = 8'b01000000, br4 = 8'b01000001, br5 = 8'b01000010, br6 = 8'b01000011, jr3 = 8'b01000100, jal3 = 8'b01000101, 
+			 br3 = 8'b01000000, br4 = 8'b01000001, br5 = 8'b01000010, br6 = 8'b01000011, br7 = 8'b11111111, jr3 = 8'b01000100, jal3 = 8'b01000101, 
 			 jal4 = 8'b01000110, mfhi3 = 8'b01000111, mflo3 = 8'b01001000, in3 = 8'b01001001, out3 = 8'b01001010, nop3 = 8'b01001011, 
 			 halt3 = 8'b01001100;
 
@@ -148,7 +148,8 @@ always @(posedge Clock, posedge Reset, posedge Stop)
 			br3				: 	Present_state = br4;
 			br4				: 	Present_state = br5;
 			br5				: 	Present_state = br6;
-			br6  				:	Present_state = fetch0;
+			br6  				:	Present_state = br7;
+			br7  				:	Present_state = fetch0;
 			
 			out3 				:	Present_state = fetch0;
 			
@@ -395,6 +396,30 @@ begin
 		out3: begin
 			MDRout <= 0; IR_enable <= 0;		PC_enable <= 0; IncPC <= 0;	
 			Gra<=1;Rout<=1;Y_enable<=1; OutPort_enable <= 1;
+		end
+		//***********************************************
+		br3: begin
+			MDRout <= 0; IR_enable <= 0;	PC_enable <= 0; IncPC <= 0;		
+			Gra<=1;Rout<=1; CON_enable<=1;
+		end
+
+		br4: begin
+			Gra<=0;Rout<=0; CON_enable<=0;
+				PCout<=1; Y_enable <= 1;
+		end
+
+		br5: begin
+			PCout<=0; Y_enable <= 0;
+			   	Cout <= 1; ZHighIn <= 1; ZLowIn <= 1;
+		end
+
+		br6: begin
+			Cout <= 0; ZHighIn <= 0; ZLowIn <= 0;
+			   	ZLowout<=1; PC_enable<=1;
+		end
+		br7: begin
+			ZLowout<=0; PC_enable<=0;
+				PCout<=1; 
 		end
 		//***********************************************
 		nop3: begin
